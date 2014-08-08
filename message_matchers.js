@@ -17,6 +17,11 @@ define(function(require, exports, module) {
                 message: "Your application is running at \u001B[04;36m" + "https://" + c9.hostname
             }, 
             {
+                // Meteor
+                pattern: /=> App running at: http:\/\/0\.0\.0\.0:8080\//,
+                message: "Your application is running at \u001B[04;36m" + "https://" + c9.hostname
+            }, 
+            {
                 // WEBrick
                 pattern: /INFO\ \ WEBrick::HTTPServer#start: pid=\d+ port=\d+/,
                 message: "Your application is running at \u001B[04;36m" + "https://" + c9.hostname
@@ -26,6 +31,11 @@ define(function(require, exports, module) {
                 pattern: /server(?: is | )(?:listening|running) (?:at|on)\b/i,
                 message: "Your application is running at \u001B[04;36m" + "https://" + c9.hostname
             },
+            {
+                // Meteor wrong host
+                pattern: /=> App running at: http:\/\/localhost:3000\//,
+                message: "For meteor, use: 'meteor --port=$IP:$PORT'."
+            }, 
             {
                 // Rails or Sinatra
                 pattern: /WARN {1,2}TCPServer Error: (?:Address already in use|Permission denied) - bind\(2\)/,
