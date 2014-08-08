@@ -14,22 +14,24 @@ define(function(require, exports, module) {
         
         var plugin = new Plugin("Ajax.org", main.consumes);
         
-        /***** Lifecycle *****/
         editors.on("create", function(e) {
             if (!e.editor || e.editor.type !== "terminal")
                 return;
-                
-            var terminal = e.editor;
-            var messageHandler = new MessageHandler(messageMatchers);
             
-            terminal.on('data', function(data) {
-                messageHandler.handleMessage(data);
-            });
+            setupTerminalMessageHandler(e.editor);    
+        });
+        
+        function setupTerminalMessageHandler(terminal) {
+            var messageHandler = new MessageHandler(messageMatchers);
             
             terminal.on("documentLoad", function(e) {
                 messageHandler.setTerminal(e.doc.getSession().terminal);
             });
-        });
+            
+            terminal.on('data', function(data) {
+                messageHandler.handleMessage(data);
+            });
+        }
         
         plugin.freezePublicAPI({});
         
