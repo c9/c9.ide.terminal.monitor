@@ -63,7 +63,7 @@ define(function(require, exports, module) {
                 terminal.writeln((cloudyMsg[i] || new Array(7).join(" ")) +
                     "\u001B[36m" + (lines[i-startLine] || ""));
             }
-            terminal.write("\u001B[00m");
+            terminal.write("\u001B[00m\n");
         }
         
         plugin.freezePublicAPI({});
