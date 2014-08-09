@@ -42,12 +42,12 @@ define(function(require, exports, module) {
     proto.formatMessage = function(message) {
         var terminal = window.tr = this.terminal;
         var lines = message.split("\r\n");
-        var cloudyMsg = ["\u001B[31mCloud9\u001B[m: "];
+        var cloudyMsg = ["\u001B[34m\u001B[1mCloud9\u001B[m: "];
         terminal.writeln("");
         var startLine = lines.length < cloudyMsg.length ? 1 : 0;
         for (var i = 0, n = Math.max(cloudyMsg.length, lines.length); i < n; i++) {
             terminal.writeln((cloudyMsg[i] || new Array(9).join(" ")) +
-                "\u001B[34m\u001B[1m" + (lines[i-startLine] || ""));
+                "\u001B[00m" + (lines[i-startLine] || ""));
         }
         terminal.write("\u001B[00m\n");
     }
