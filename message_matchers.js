@@ -9,33 +9,33 @@ define(function(require, exports, module) {
     "use strict";
     
     module.exports = function(c9) {
-        var portHostMsg = "Error: you may be using the wrong PORT & HOST for your server app\r\n";
+        var portHostMsg = "You may be using the wrong PORT & HOST for your server application.\r\n";
         var messageMatchers = [
             {
-                // Express
-                pattern: /Express server listening on port/,
-                message: "Your application is running at \u001B[04;36m" + "https://" + c9.hostname
-            }, 
+                // Ionic, Meteor wrong port
+                pattern: /(Running dev server:|App running at:).*?:(?=\d{4})(?!8080)/,
+                message: portHostMsg + "Try passing $IP and $PORT to properly launch your application."
+            },
             {
-                // Meteor
-                pattern: /=> App running at: http:\/\/0\.0\.0\.0:8080\//,
+                // Ionic, Meteor correct port
+                pattern: /(Running dev server:|App running at:).*?:(?=8080)/,
                 message: "Your application is running at \u001B[04;36m" + "https://" + c9.hostname
-            }, 
+            },
+            {
+                // Generic
+                pattern: /server(?: is | )(?:listening|running) (?:at|on).*?(?=\d{4})(?!8080)/i,
+                message: portHostMsg + "Try passing $IP and $PORT to properly launch your application."
+            },
+            {
+                // Generic correct port
+                pattern: /server(?: is | )(?:listening|running) (?:at|on).*?(?=8080)/i,
+                message: "Your application is running at \u001B[04;36m" + "https://" + c9.hostname
+            },
             {
                 // WEBrick
                 pattern: /INFO\ \ WEBrick::HTTPServer#start: pid=\d+ port=\d+/,
                 message: "Your application is running at \u001B[04;36m" + "https://" + c9.hostname
-            }, 
-            {
-                // Generic
-                pattern: /server(?: is | )(?:listening|running) (?:at|on)\b/i,
-                message: "Your application is running at \u001B[04;36m" + "https://" + c9.hostname
             },
-            {
-                // Meteor wrong host
-                pattern: /=> App running at: http:\/\/localhost:3000\//,
-                message: "For meteor, use: 'meteor --port=$IP:$PORT'."
-            }, 
             {
                 // Rails or Sinatra
                 pattern: /WARN {1,2}TCPServer Error: (?:Address already in use|Permission denied) - bind\(2\)/,
@@ -50,7 +50,7 @@ define(function(require, exports, module) {
             {
                 // Django app
                 pattern: /Error: You don't have permission to access that port./,
-                message: portHostMsg + "use './manage.py runserver $IP:$PORT' to run your Django application"
+                message: portHostMsg + "use './manage.py runserver $IP:$PORT' to run your Django application."
             },
             {
                 // Tunneling to some database provider
