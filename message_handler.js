@@ -10,7 +10,6 @@ define(function(require, exports, module) {
     
     var MessageHandler = function(messageMatchers) {
         this.messageMatchers = messageMatchers;
-        this.queue = [];
     };
     
     var proto = MessageHandler.prototype;
@@ -21,15 +20,8 @@ define(function(require, exports, module) {
     
     proto.handleMessage = function(data) {
         if (!this.terminal) {
-            this.queue.push(data);
             return;
         }
-        
-        if (this.queue.length) {
-            this.matchMessage(this.queue.join());
-            this.queue = [];
-        }
-        
         this.matchMessage(data);
     };
     
