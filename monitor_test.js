@@ -21,7 +21,7 @@ require([
         hostname: 'c9.io'
     };
     
-    var messageMatchers = messageMatchers(c9);
+    messageMatchers = messageMatchers(c9);
     var matchers = messageMatchers.matchers;
     var messages = messageMatchers.messages;
     
