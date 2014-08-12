@@ -14,7 +14,7 @@ define(function(require, exports, module) {
         
         var messages = {
             generic: {
-                wrongPortIP: wrongPortIP + "Try passing $PORT and $IP to properly launch your application.",
+                wrongPortIP: wrongPortIP + "Try passing $PORT and $IP to properly launch your applicatio.\r\nYou can find more information on https://docs.c9.io/running_and_debugging_code.html.",
                 appRunning: "Your code is running at \u001B[04;36m" + "https://" + c9.hostname,
                 bindToInternalIP: wrongPortIP + "Only binding to the internal IP configured in $IP is supported."
             },
