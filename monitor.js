@@ -22,7 +22,7 @@ define(function(require, exports, module) {
         });
         
         function setupTerminalMessageHandler(terminal) {
-            var messageHandler = new MessageHandler(messageMatchers);
+            var messageHandler = new MessageHandler(messageMatchers.matchers);
             
             terminal.on("documentLoad", function(e) {
                 messageHandler.setTerminal(e.doc.getSession().terminal);

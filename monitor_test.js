@@ -2,61 +2,60 @@
 
 "use client";
 
-require(["lib/architect/architect", "lib/chai/chai"], function (architect, chai) {
+require([
+    "lib/architect/architect", 
+    "lib/chai/chai", 
+    "sinon",
+    "./plugins/c9.ide.terminal.monitor/message_handler",
+    "./plugins/c9.ide.terminal.monitor/message_matchers"
+], function (architect, chai, sinon, MessageHandler, messageMatchers) {
     var expect = chai.expect;
-
-    expect.setupArchitectTest([
-        "plugins/c9.core/ext",
-        {
-            packagePath: "plugins/c9.ide.terminal.monitor/monitor"
-        },
-        // Mock plugins
-        {
-            consumes: [],
-            provides: ["c9"],
-            setup: expect.html.mocked
-        },
-        {
-            consumes: ["terminal.monitor"],
-            provides: [],
-            setup: main
-        }
-    ], architect);
     
-    function main(options, imports, register) {
-        var monitor = imports["terminal.monitor"];
-        
-        describe("monitor", function() {
-            it("should work translate `Server running on 0.0.0.0:8080` to `Server running on https://undefined`", function() {
-                var data = monitor.processData("Server running on 0.0.0.0:8080");
-                expect(data).to.equal("Server running on https://undefined");
-            });
-            it("should work translate `Server running on http://0.0.0.0:8080` to `Server running on https://undefined`", function() {
-                var data = monitor.processData("Server running on http://0.0.0.0:8080");
-                expect(data).to.equal("Server running on https://undefined");
-            });
-            it("should work translate `Server running on https://0.0.0.0:8080` to `Server running on https://undefined`", function() {
-                var data = monitor.processData("Server running on https://0.0.0.0:8080");
-                expect(data).to.equal("Server running on https://undefined");
-            });
-            it("should work translate `Server running on localhost:3000` to `Server running on https://undefined`", function() {
-                var data = monitor.processData("Server running on localhost:3000");
-                expect(data).to.equal("Server running on https://undefined");
-            });
-            it("should work translate `Server running on http://localhost:3000` to `Server running on https://undefined`", function() {
-                var data = monitor.processData("Server running on http://localhost:3000");
-                expect(data).to.equal("Server running on https://undefined");
-            });
-            it("should work translate `Server running on https://localhost:3000` to `Server running on https://undefined`", function() {
-                var data = monitor.processData("Server running on https://localhost:3000");
-                expect(data).to.equal("Server running on https://undefined");
-            });
-            it("should work translate `Server running on https://localhost` to `Server running on https://undefined`", function() {
-                var data = monitor.processData("Server running on https://localhosd9 t");
-                expect(data).to.equal("Server running on https://undefined");
-            });
+    
+    // Mocks
+    var terminal = {
+        writeln: function() {}
+    };
+    
+    var c9 = {
+        hostname: 'c9.io'
+    };
+    
+    var messageMatchers = messageMatchers(c9);
+    var matchers = messageMatchers.matchers;
+    var messages = messageMatchers.messages;
+    
+    describe("Message handler", function() {
+        var messageHandler;
+        var formatMessageSpy;
+        beforeEach(function() {
+            messageHandler = new MessageHandler(matchers);
+            messageHandler.setTerminal(terminal);
+            formatMessageSpy = sinon.spy(messageHandler, "formatMessage");
+            
         });
+        it("should translate `App running at: http://0.0.0.0:8080/`", function() {
+            messageHandler.handleMessage("App running at: http://0.0.0.0:8080/");
+            expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true)
+        });
+        it("should translate `App running at: http://0.0.0.0:8081/`", function() {
+            messageHandler.handleMessage("App running at: http://0.0.0.0:8081/");
+            expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true)
+        });
+        it("should translate `Running dev server: http://0.0.0.0:8080`", function() {
+            messageHandler.handleMessage("Server running on http://0.0.0.0:8080");
+            expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true)
+        });
+        it("should translate `Running dev server: http://0.0.0.0:8081`", function() {
+            messageHandler.handleMessage("Server running on http://0.0.0.0:8081");
+            expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true)
+        });
+        it("should translate `Running dev server: http://0.0.0.0:8081`", function() {
+            messageHandler.handleMessage("Server running on http://0.0.0.0:8081");
+            expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true)
+        });
+    });
         
-        onload && onload();
-    }
+    onload && onload();
+    
 });
