@@ -74,7 +74,7 @@ define(function(require, exports, module) {
             },
             {
                 // FALLBACK/GENERIC
-                pattern: /Permission denied for socket: 0\.0\.0\.0/,
+                pattern: /Permission denied for socket: 0\.0\.0\.0q/,
                 message: messages.generic.bindToInternalIP
             }
         ];
