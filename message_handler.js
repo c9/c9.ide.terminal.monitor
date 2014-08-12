@@ -40,7 +40,7 @@ define(function(require, exports, module) {
     };
     
     proto.formatMessage = function(message) {
-        var terminal = window.tr = this.terminal;
+        var terminal = this.terminal;
         var lines = message.split("\r\n");
         var cloudyMsg = ["\u001B[34m\u001B[1mCloud9\u001B[m: "];
         terminal.writeln("");
@@ -49,7 +49,7 @@ define(function(require, exports, module) {
             terminal.writeln((cloudyMsg[i] || new Array(9).join(" ")) +
                 "\u001B[00m" + (lines[i-startLine] || ""));
         }
-        terminal.write("\u001B[00m\n");
+        terminal.writeln("\u001B[00m");
     }
     
     module.exports = MessageHandler;
