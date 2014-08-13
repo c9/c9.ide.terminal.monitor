@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
     main.consumes = [
-        "c9", "Plugin", "editors"
+        "c9", "Plugin", "editors", "dialog.error"
     ];
     main.provides = ["terminal.monitor"];
     return main;
@@ -9,6 +9,7 @@ define(function(require, exports, module) {
         var c9 = imports.c9;
         var Plugin = imports.Plugin;
         var editors = imports.editors;
+        var messageView = imports["dialog.error"];
         var MessageHandler = require("./message_handler");
         var messageMatchers = require("./message_matchers")(c9);
         
@@ -22,11 +23,7 @@ define(function(require, exports, module) {
         });
         
         function setupTerminalMessageHandler(terminal) {
-            var messageHandler = new MessageHandler(messageMatchers.matchers);
-            
-            terminal.on("documentLoad", function(e) {
-                messageHandler.setTerminal(e.doc.getSession().terminal);
-            });
+            var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
             
             terminal.on('data', function(data) {
                 messageHandler.handleMessage(data);
