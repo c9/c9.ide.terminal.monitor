@@ -19,14 +19,16 @@ define(function(require, exports, module) {
             if (!e.editor || e.editor.type !== "terminal")
                 return;
             
-            setupTerminalMessageHandler(e.editor);    
+            e.editor.on("documentLoad", function(e) {
+                setupTerminalMessageHandler(e.doc.getSession().terminal);
+            });
+       
         });
         
         function setupTerminalMessageHandler(terminal) {
             var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
             
             var seenUpTo = 0;
-            var hasFirstDrawCompleted = false;
             var hasResizeCompleted = false;
             
             // 1. On first draw we want the seenUpTo count reflect the amount of lines with output and not empty ones.
@@ -37,7 +39,7 @@ define(function(require, exports, module) {
                 var linesIndex = y + e.ybase - 1;
                 var line = e.lines[linesIndex].map(function(character) { return character[1]; }).join("");
 
-                if (!hasFirstDrawCompleted || !hasResizeCompleted) {
+                if (!hasResizeCompleted) {
                     if (line.length) {
                         seenUpTo = e.y;
                     }
@@ -51,10 +53,6 @@ define(function(require, exports, module) {
                 messageHandler.handleMessage(line);
             });
             
-            terminal.on("afterConnect", function() {
-                hasFirstDrawCompleted = true;
-            });
-            
             var resizeTimeout;
             terminal.on("resizeStart", function() {
                 hasResizeCompleted = false;
@@ -65,7 +63,7 @@ define(function(require, exports, module) {
                 resizeTimeout = setTimeout(function() {
                     resizeTimeout = null;
                     hasResizeCompleted = true;
-                }, 500);
+                }, 1000);
             });
         }
         
