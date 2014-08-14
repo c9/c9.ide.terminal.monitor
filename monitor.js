@@ -26,33 +26,39 @@ define(function(require, exports, module) {
             var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
             
             var seenUpTo = 0;
-            var skip = true;
+            var redraw = true;
+            var initialize = true;
             
             // Make sure we mark newlines which we already received as already handled;
             terminal.on("newline", function(e) {
-                var y = e.y + e.ybase;
-                // if (e.y - 1 > seenUpTo || skip) return;
+                var y = e.y;
+                var linesY = y + e.ybase;
                 
-                // var line = e.lines[y - 1].map(function(character) { return character[1]; }).join("");
-                // seenUpTo = e.y;
+                var line = e.lines[linesY - 1].map(function(character) { return character[1]; }).join("");
+                if (redraw && line.length) {
+                    seenUpTo = e.y;
+                }
                 
-                // messageHandler.handleMessage(line);
+                if (e.y - 1 > seenUpTo || redraw) return;
+                
+                var line = e.lines[linesY - 1].map(function(character) { return character[1]; }).join("");
+                seenUpTo = e.y;
+                
+                messageHandler.handleMessage(line);
             });
             
             terminal.on("afterConnect", function() {
-                seenUpTo = 0;
-                skip = false;
+                redraw = false;
+                initialize = false;
                 console.log("afterConnect");
             });
             
-            terminal.on("clear", function() {
-                seenUpTo = 0;
-                console.log("clear");
+            terminal.on("resize", function() {
+                redraw = true;
+                !initialize && setTimeout(function() {
+                    redraw = false;
+                }, 500);
             });
-            
-            terminal.on("data", function(data) {
-                //console.log(data)
-            })
         }
         
         plugin.freezePublicAPI({});
