@@ -26,37 +26,45 @@ define(function(require, exports, module) {
             var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
             
             var seenUpTo = 0;
-            var redraw = true;
-            var initialize = true;
+            var hasFirstDrawCompleted = false;
+            var hasResizeCompleted = false;
+            
+            // 1. On first draw we want the seenUpTo count reflect the amount of lines with output and not empty ones.
             
             // Make sure we mark newlines which we already received as already handled;
             terminal.on("newline", function(e) {
                 var y = e.y;
-                var linesY = y + e.ybase;
-                
-                var line = e.lines[linesY - 1].map(function(character) { return character[1]; }).join("");
-                if (redraw && line.length) {
-                    seenUpTo = e.y;
+                var linesIndex = y + e.ybase - 1;
+                var line = e.lines[linesIndex].map(function(character) { return character[1]; }).join("");
+
+                if (!hasFirstDrawCompleted || !hasResizeCompleted) {
+                    if (line.length) {
+                        seenUpTo = e.y;
+                    }
+                    return;
                 }
+                    
+                if (y - 1 > seenUpTo) return;
                 
-                if (e.y - 1 > seenUpTo || redraw) return;
-                
-                var line = e.lines[linesY - 1].map(function(character) { return character[1]; }).join("");
-                seenUpTo = e.y;
+                seenUpTo = y;
                 
                 messageHandler.handleMessage(line);
             });
             
             terminal.on("afterConnect", function() {
-                redraw = false;
-                initialize = false;
-                console.log("afterConnect");
+                hasFirstDrawCompleted = true;
             });
             
-            terminal.on("resize", function() {
-                redraw = true;
-                !initialize && setTimeout(function() {
-                    redraw = false;
+            var resizeTimeout;
+            terminal.on("resizeStart", function() {
+                hasResizeCompleted = false;
+                if (resizeTimeout) {
+                    clearTimeout(resizeTimeout);
+                }
+                
+                resizeTimeout = setTimeout(function() {
+                    resizeTimeout = null;
+                    hasResizeCompleted = true;
                 }, 500);
             });
         }
