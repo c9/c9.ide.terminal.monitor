@@ -10,23 +10,24 @@ define(function(require, exports, module) {
     
     module.exports = function(c9) {
         
-        var wrongPortIP = "You may be using the wrong PORT & IP for your server application.\r\n";
+        var prefix = '<strong>Cloud9 Help:</strong> ';
+        var wrongPortIP = "You may be using the wrong PORT & IP for your server application.";
         
         var messages = {
             generic: {
-                wrongPortIP: wrongPortIP + "Try passing $PORT and $IP to properly launch your application.\r\nYou can find more information on https://docs.c9.io/running_and_debugging_code.html.",
-                appRunning: "Your code is running at https://" + c9.hostname,
-                bindToInternalIP: wrongPortIP + "Only binding to the internal IP configured in $IP is supported."
+                wrongPortIP: prefix + wrongPortIP + "Try passing $PORT and $IP to properly launch your application. You can find more information on https://docs.c9.io/running_and_debugging_code.html.",
+                appRunning: prefix + "Your code is running at https://" + c9.hostname,
+                bindToInternalIP: prefix + wrongPortIP + "Only binding to the internal IP configured in $IP is supported."
             },
             rails: {
-                wrongPortIP: wrongPortIP + "For rails, use: 'rails s -p $PORT -b $IP'\r\n" +
+                wrongPortIP: prefix + wrongPortIP + "For rails, use: 'rails s -p $PORT -b $IP'" +
                     "For Sinatra, use: ruby app.rb -p $PORT -o $IP'"
             },
             node: {
-                wrongPortIP: wrongPortIP + "Node: use 'process.env.PORT' as the port and 'process.env.IP' as the host in your scripts."
+                wrongPortIP: prefix + wrongPortIP + " Node: use 'process.env.PORT' as the port and 'process.env.IP' as the host in your scripts."
             },
             django: {
-                wrongPortIP: wrongPortIP + "use './manage.py runserver $IP:$PORT' to run your Django application."
+                wrongPortIP: prefix + wrongPortIP + " Use './manage.py runserver $IP:$PORT' to run your Django application."
             }
             
         };

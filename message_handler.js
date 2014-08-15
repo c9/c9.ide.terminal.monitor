@@ -23,7 +23,7 @@ define(function(require, exports, module) {
     };
     
     proto.formatMessage = function(message) {
-        this.messageView.show('Cloud9 Help: ' + message, this.referenceNode);
+        this.messageView.show(message, this.referenceNode);
     };
     
     module.exports = MessageHandler;
