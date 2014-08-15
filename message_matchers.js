@@ -15,16 +15,15 @@ define(function(require, exports, module) {
         
         var messages = {
             generic: {
-                wrongPortIP: prefix + wrongPortIP + "Try passing $PORT and $IP to properly launch your application. You can find more information on https://docs.c9.io/running_and_debugging_code.html.",
+                wrongPortIP: prefix + wrongPortIP + "Try passing $PORT and $IP to properly launch your application. You can find more information <a href='https://docs.c9.io/running_and_debugging_code.html'>in our docs.</a>",
                 appRunning: prefix + "Your code is running at https://" + c9.hostname,
                 bindToInternalIP: prefix + wrongPortIP + "Only binding to the internal IP configured in $IP is supported."
             },
             rails: {
-                wrongPortIP: prefix + wrongPortIP + "For rails, use: 'rails s -p $PORT -b $IP'" +
-                    "For Sinatra, use: ruby app.rb -p $PORT -o $IP'"
+                wrongPortIP: prefix + wrongPortIP + "For rails, use: 'rails s -p $PORT -b $IP'. For Sinatra, use: ruby app.rb -p $PORT -o $IP'."
             },
             node: {
-                wrongPortIP: prefix + wrongPortIP + " Node: use 'process.env.PORT' as the port and 'process.env.IP' as the host in your scripts."
+                wrongPortIP: prefix + wrongPortIP + " Use 'process.env.PORT' as the port and 'process.env.IP' as the host in your scripts or <a href='https://docs.c9.io/running_and_debugging_code.html'>refer to the documentation for more information</a>."
             },
             django: {
                 wrongPortIP: prefix + wrongPortIP + " Use './manage.py runserver $IP:$PORT' to run your Django application."
