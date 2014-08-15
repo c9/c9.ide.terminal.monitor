@@ -40,16 +40,21 @@ define(function(require, exports, module) {
             if (!containerNode)
                 return;
             
-            var boundingRect = referenceNode.getBoundingClientRect();
-            var offset = { top: 8, left: 12 };
-            var top = boundingRect.top + boundingRect.height + offset.top;
-            var left = boundingRect.left + offset.left;
+            var referenceBoundingRect = referenceNode.getBoundingClientRect();
+            var offset = { top: 8, left: 8, right: 8 };
+            var top = referenceBoundingRect.top + offset.top;
+            var left = referenceBoundingRect.left + offset.left;
+            var width = referenceBoundingRect.width - offset.right - offset.left;
             
             contentNode.innerHTML = message;
             containerNode.style.display = 'block';
             containerNode.style.top = top + 'px';
             containerNode.style.left = left + 'px';
+            containerNode.style.width = width + 'px';
             
+            setTimeout(function() {
+                containerNode.style.opacity = 1;
+            });
             containerNode.focus();
         }
         
@@ -58,6 +63,7 @@ define(function(require, exports, module) {
                 return;
             
             containerNode.style.display = 'none';
+            containerNode.style.opacity = 0;
             contentNode.innerHTML = '';
         }
         

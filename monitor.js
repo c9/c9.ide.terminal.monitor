@@ -29,7 +29,7 @@ define(function(require, exports, module) {
         
         function setupTerminalMessageHandler(session) {
             var terminal = session.terminal;
-            var referenceNode = session.tab.aml.$button;
+            var referenceNode = session.tab.aml.$pHtmlNode.querySelector('.session_page');
             var messageHandler = new MessageHandler(messageMatchers.matchers, messageView, referenceNode);
             
             var seenUpTo = 0;
