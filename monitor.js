@@ -24,12 +24,12 @@ define(function(require, exports, module) {
             e.editor.on("documentLoad", function(e) {
                 setupTerminalMessageHandler(e.doc.getSession());
             });
-       
         });
         
         function setupTerminalMessageHandler(session) {
             var terminal = session.terminal;
-            var referenceNode = session.tab.aml.$pHtmlNode.querySelector('.session_page');
+            var tab = session.tab;
+            var referenceNode = tab.aml.$pHtmlNode.querySelector('.session_page');
             var messageHandler = new MessageHandler(messageMatchers.matchers, messageView, referenceNode);
             
             var seenUpTo = 0;
@@ -51,10 +51,11 @@ define(function(require, exports, module) {
                 }
                     
                 if (y - 1 > seenUpTo) return;
-                
                 seenUpTo = y;
                 
-                messageHandler.handleMessage(line);
+                if (tab.isActive()) {
+                    messageHandler.handleMessage(line);
+                }
             });
             
             var resizeTimeout;
