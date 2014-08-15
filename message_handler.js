@@ -8,9 +8,10 @@
 define(function(require, exports, module) {
     "use strict";
     
-    var MessageHandler = function(messageMatchers, messageView) {
+    var MessageHandler = function(messageMatchers, messageView, referenceNode) {
         this.messageMatchers = messageMatchers;
         this.messageView = messageView;
+        this.referenceNode = referenceNode;
     };
     
     var proto = MessageHandler.prototype;
@@ -22,7 +23,7 @@ define(function(require, exports, module) {
     };
     
     proto.formatMessage = function(message) {
-        this.messageView.show('Cloud9 Help: ' + message);
+        this.messageView.show('Cloud9 Help: ' + message, this.referenceNode);
     };
     
     module.exports = MessageHandler;

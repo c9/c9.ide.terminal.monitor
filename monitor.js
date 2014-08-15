@@ -1,6 +1,7 @@
 define(function(require, exports, module) {
     main.consumes = [
-        "c9", "Plugin", "editors", "dialog.error"
+        "c9", "Plugin", "editors", "dialog.error",
+        "terminal.monitor.message_view"
     ];
     main.provides = ["terminal.monitor"];
     return main;
@@ -9,7 +10,8 @@ define(function(require, exports, module) {
         var c9 = imports.c9;
         var Plugin = imports.Plugin;
         var editors = imports.editors;
-        var messageView = imports["dialog.error"];
+        var messageView = imports["terminal.monitor.message_view"];
+        
         var MessageHandler = require("./message_handler");
         var messageMatchers = require("./message_matchers")(c9);
         
@@ -20,13 +22,15 @@ define(function(require, exports, module) {
                 return;
             
             e.editor.on("documentLoad", function(e) {
-                setupTerminalMessageHandler(e.doc.getSession().terminal);
+                setupTerminalMessageHandler(e.doc.getSession());
             });
        
         });
         
-        function setupTerminalMessageHandler(terminal) {
-            var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
+        function setupTerminalMessageHandler(session) {
+            var terminal = session.terminal;
+            var referenceNode = session.tab.aml.$button;
+            var messageHandler = new MessageHandler(messageMatchers.matchers, messageView, referenceNode);
             
             var seenUpTo = 0;
             var hasResizeCompleted = false;
