@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     main.consumes = [
         "c9", "Plugin", "editors", "dialog.error",
-        "terminal.monitor.message_view"
+        "terminal.monitor.message_view", "tabManager"
     ];
     main.provides = ["terminal.monitor"];
     return main;
@@ -11,6 +11,7 @@ define(function(require, exports, module) {
         var Plugin = imports.Plugin;
         var editors = imports.editors;
         var messageView = imports["terminal.monitor.message_view"];
+        var tabManager = imports.tabManager;
         
         var MessageHandler = require("./message_handler");
         var messageMatchers = require("./message_matchers")(c9);
