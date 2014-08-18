@@ -2,13 +2,10 @@
 .terminal_monitor_message {
     border-radius: 3px;
     
-    background: -moz-linear-gradient(top,  rgba(103, 126, 10, 1) 0%, rgba(71, 87, 9, 1) 100%); /* FF3.6+ */
-    background: -webkit-linear-gradient(top,  rgba(103, 126, 10, 1) 0%, rgba(71, 87, 9, 1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -ms-linear-gradient(top,  rgba(103, 126, 10, 1) 0%, rgba(71, 87, 9, 1) 100%); /* IE10+ */
-    background: linear-gradient(to bottom, rgba(103, 126, 10, 1) 0%, rgba(71, 87, 9, 1) 100%); /* W3C */
+    .gradient(~"linear-gradient(to bottom, #6D8009 0%, #546B0C 100%)"); /* W3C */
     
     max-width: 350px;
-    padding : 5px;
+    padding : 8px;
     font-family : Arial;
     font-size : 12px;
     
@@ -18,11 +15,21 @@
     transition: opacity .2s;
     box-sizing: border-box;
     z-index : 1000000;
-    box-shadow: 2px 2px 13px rgba(0,0,0,0.8), inset -1px -1px rgba(255,255,255,0.1), inset 1px 1px rgba(255,255,255,0.2);
-    -webkit-font-smoothing: antialiased;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.8), inset -1px -1px rgba(255, 255, 255, 0.2), inset 1px 1px rgba(255, 255, 255, 0.2);
+    .font-smoothing(true);
+    line-height: 15px;
 }
 
-.terminal_monitor_message>.message{
+.terminal_monitor_message > .message{
     color : #E6E6E6;
     margin : 0 0 0 1px;
+}
+
+.terminal_monitor_message > .message strong {
+    display: block;
+    margin-bottom: 3px;
+}
+
+.terminal_monitor_message > .message a {
+    color: rgb(197, 213, 23);
 }

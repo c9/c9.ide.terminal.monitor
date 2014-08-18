@@ -10,7 +10,7 @@ define(function(require, exports, module) {
     
     module.exports = function(c9) {
         
-        var prefix = '<strong>Cloud9 Help:</strong> ';
+        var prefix = '<strong>Cloud9 Help</strong> ';
         var wrongPortIP = "You may be using the wrong PORT & IP for your server application.";
         
         var messages = {
