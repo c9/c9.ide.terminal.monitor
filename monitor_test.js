@@ -10,15 +10,8 @@ require([
     "./plugins/c9.ide.terminal.monitor/message_matchers"
 ], function (architect, chai, sinon, MessageHandler, messageMatchers) {
     var expect = chai.expect;
-    
-    
-    // Mocks
-    var terminal = {
-        writeln: function() {}
-    };
-    
     var c9 = {
-        hostname: 'c9.io'
+        hostname: 'c9w.io'
     };
     
     messageMatchers = messageMatchers(c9);
@@ -28,10 +21,11 @@ require([
     describe("Message handler", function() {
         var messageHandler;
         var formatMessageSpy;
+        var messageView;
         beforeEach(function() {
-            messageHandler = new MessageHandler(matchers);
-            messageHandler.setTerminal(terminal);
-            formatMessageSpy = sinon.spy(messageHandler, "formatMessage");
+            messageView = { show: function() {} };
+            messageHandler = new MessageHandler(matchers, messageView);
+            formatMessageSpy = sinon.spy(messageView, "show");
             
         });
         it("catches generic (listening at) wrong port", function() {
