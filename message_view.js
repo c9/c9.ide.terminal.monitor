@@ -18,6 +18,10 @@ define(function(require, exports, module) {
         tabManager.on("tabDestroy", function() {
             hide();
         });
+        
+        tabManager.on("tabBeforeReparent", function() {
+            hide();
+        });
 
         var containerNode, contentNode;
 

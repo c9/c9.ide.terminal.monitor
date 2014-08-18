@@ -32,8 +32,6 @@ define(function(require, exports, module) {
             var terminal = session.terminal;
             var seenUpTo = 0;
             var hasResizeCompleted = false;
-            var tab = session.tab;
-            var referenceNode = tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
             
             // 1. On first draw we want the seenUpTo count reflect the amount of lines with output and not empty ones.
             
@@ -53,7 +51,9 @@ define(function(require, exports, module) {
                 if (y - 1 > seenUpTo) return;
                 seenUpTo = y;
                 
+                var tab = session.tab;
                 if (tab.isActive() && tabManager.focussedTab === tab) {
+                    var referenceNode = tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
                     messageHandler.handleMessage(line, referenceNode);
                 }
             });
