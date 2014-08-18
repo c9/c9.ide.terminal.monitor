@@ -23,7 +23,7 @@ define(function(require, exports, module) {
             hide();
         });
 
-        var containerNode, contentNode;
+        var containerNode, contentNode, isVisible = false;
 
         var loaded = false;
         function load(){
@@ -43,6 +43,7 @@ define(function(require, exports, module) {
 
             containerNode.addEventListener("blur", hide);
             contentNode.addEventListener("click", handleClick);
+            document.addEventListener("click", hide);
         }
         
         function handleClick(e) {
@@ -87,15 +88,17 @@ define(function(require, exports, module) {
                 containerNode.style.opacity = 1;
             });
             containerNode.focus();
+            isVisible = true;
         }
         
         function hide() {
-            if (!containerNode)
+            if (!containerNode || !isVisible)
                 return;
             
             containerNode.style.display = 'none';
             containerNode.style.opacity = 0;
             contentNode.innerHTML = '';
+            isVisible = false;
         }
         
         plugin.on("load", function(){
