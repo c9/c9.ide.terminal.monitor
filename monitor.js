@@ -17,6 +17,11 @@ define(function(require, exports, module) {
         var messageMatchers = require("./message_matchers")(c9);
         
         var plugin = new Plugin("Ajax.org", main.consumes);
+        var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
+        
+        tabManager.on("tabDestroy", function() {
+            messageHandler.messageView.hide();
+        });
         
         editors.on("create", function(e) {
             if (!e.editor || e.editor.type !== "terminal")
@@ -52,8 +57,8 @@ define(function(require, exports, module) {
                 if (y - 1 > seenUpTo) return;
                 seenUpTo = y;
                 
-                if (tab.isActive()) {
-                    messageHandler.handleMessage(line, referenceNode);
+                if (tab.isActive() && tabManager.focussedTab === tab) {
+                    messageHandler.handleMessage(line, currentPage);
                 }
             });
             
