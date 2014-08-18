@@ -11,7 +11,7 @@ require([
 ], function (architect, chai, sinon, MessageHandler, messageMatchers) {
     var expect = chai.expect;
     var c9 = {
-        hostname: 'c9w.io'
+        hostname: 'c9.io'
     };
     
     messageMatchers = messageMatchers(c9);
