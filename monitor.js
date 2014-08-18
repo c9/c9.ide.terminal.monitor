@@ -19,10 +19,6 @@ define(function(require, exports, module) {
         var plugin = new Plugin("Ajax.org", main.consumes);
         var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
         
-        tabManager.on("tabDestroy", function() {
-            messageHandler.messageView.hide();
-        });
-        
         editors.on("create", function(e) {
             if (!e.editor || e.editor.type !== "terminal")
                 return;
@@ -37,7 +33,7 @@ define(function(require, exports, module) {
             var seenUpTo = 0;
             var hasResizeCompleted = false;
             var tab = session.tab;
-            var currentPage = tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
+            var referenceNode = tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
             
             // 1. On first draw we want the seenUpTo count reflect the amount of lines with output and not empty ones.
             
@@ -58,7 +54,7 @@ define(function(require, exports, module) {
                 seenUpTo = y;
                 
                 if (tab.isActive() && tabManager.focussedTab === tab) {
-                    messageHandler.handleMessage(line, currentPage);
+                    messageHandler.handleMessage(line, referenceNode);
                 }
             });
             

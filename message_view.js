@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
     main.consumes = [
-        "Plugin", "ui"
+        "Plugin", "ui", "tabManager"
     ];
     main.provides = ["terminal.monitor.message_view"];
     return main;
@@ -8,11 +8,16 @@ define(function(require, exports, module) {
     function main(options, imports, register) {
         var ui = imports.ui;
         var Plugin = imports.Plugin;
+        var tabManager = imports.tabManager;
         
         /***** Initialization *****/
 
         var plugin = new Plugin("Ajax.org", main.consumes);
         var css = require("text!./message_view.css");
+        
+        tabManager.on("tabDestroy", function() {
+            hide();
+        });
 
         var containerNode, contentNode;
 
@@ -23,7 +28,6 @@ define(function(require, exports, module) {
             
             // Load CSS
             ui.insertCss(css, plugin);
-            
             draw();
         }
 
@@ -33,9 +37,30 @@ define(function(require, exports, module) {
             containerNode = ui.insertHtml(null, html, plugin)[0];
             contentNode = containerNode.querySelector(".message");
 
-            containerNode.addEventListener("blur", function() {
-                hide();
-            });
+            containerNode.addEventListener("blur", hide);
+            contentNode.addEventListener("click", handleClick);
+        }
+        
+        function handleClick(e) {
+            switch (e.target.getAttribute("data-type")) {
+                case "preview": 
+                    handlePreview(e);    
+                default:
+                    hide();
+            }
+        }
+        
+        function handlePreview(e) {
+            e.preventDefault();
+            tabManager.open({
+                editorType : "preview",
+                active     : true,
+                document   : {
+                    preview : {
+                        path: e.target.innerText
+                    }
+                }
+            }, function(err, tab) {});
         }
         
         function show(message, referenceNode) {
