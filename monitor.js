@@ -29,13 +29,10 @@ define(function(require, exports, module) {
         
         function setupTerminalMessageHandler(session) {
             var terminal = session.terminal;
-            var tab = session.tab;
-            var referenceNode = tab.aml.$pHtmlNode.querySelector('.session_page');
-            console.log(referenceNode)
-            var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
-            
             var seenUpTo = 0;
             var hasResizeCompleted = false;
+            var tab = session.tab;
+            var currentPage = tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
             
             // 1. On first draw we want the seenUpTo count reflect the amount of lines with output and not empty ones.
             

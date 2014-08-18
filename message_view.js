@@ -43,7 +43,6 @@ define(function(require, exports, module) {
                 return;
 
             var referenceBoundingRect = referenceNode.getBoundingClientRect();
-
             var offset = { top: 8, left: 8, right: 8 };
             var top = referenceBoundingRect.top + offset.top;
             var left = referenceBoundingRect.left + offset.left;
