@@ -31,7 +31,8 @@ define(function(require, exports, module) {
             var terminal = session.terminal;
             var tab = session.tab;
             var referenceNode = tab.aml.$pHtmlNode.querySelector('.session_page');
-            var messageHandler = new MessageHandler(messageMatchers.matchers, messageView, referenceNode);
+            console.log(referenceNode)
+            var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
             
             var seenUpTo = 0;
             var hasResizeCompleted = false;
@@ -55,7 +56,7 @@ define(function(require, exports, module) {
                 seenUpTo = y;
                 
                 if (tab.isActive()) {
-                    messageHandler.handleMessage(line);
+                    messageHandler.handleMessage(line, referenceNode);
                 }
             });
             

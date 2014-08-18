@@ -41,9 +41,9 @@ define(function(require, exports, module) {
         function show(message, referenceNode) {
             if (!containerNode)
                 return;
-            
+
             var referenceBoundingRect = referenceNode.getBoundingClientRect();
-console.log(referenceBoundingRect); // Having a rare case where x/y seem to be 0...
+
             var offset = { top: 8, left: 8, right: 8 };
             var top = referenceBoundingRect.top + offset.top;
             var left = referenceBoundingRect.left + offset.left;

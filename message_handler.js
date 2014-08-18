@@ -8,22 +8,17 @@
 define(function(require, exports, module) {
     "use strict";
     
-    var MessageHandler = function(messageMatchers, messageView, referenceNode) {
+    var MessageHandler = function(messageMatchers, messageView) {
         this.messageMatchers = messageMatchers;
         this.messageView = messageView;
-        this.referenceNode = referenceNode;
     };
     
     var proto = MessageHandler.prototype;
 
-    proto.handleMessage = function(data) {
+    proto.handleMessage = function(data, referenceNode) {
         this.messageMatchers.forEach(function(trigger) {
-            trigger.pattern.test(data) && this.formatMessage(trigger.message);
+            trigger.pattern.test(data) && this.messageView.show(trigger.message, referenceNode);
         }, this);
-    };
-    
-    proto.formatMessage = function(message) {
-        this.messageView.show(message, this.referenceNode);
     };
     
     module.exports = MessageHandler;
