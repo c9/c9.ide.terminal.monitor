@@ -33,7 +33,9 @@ define(function(require, exports, module) {
             containerNode = ui.insertHtml(null, html, plugin)[0];
             contentNode = containerNode.querySelector(".message");
 
-            apf.addEventListener("movefocus", hide);
+            containerNode.addEventListener("blur", function() {
+                hide();
+            });
         }
         
         function show(message, referenceNode) {

@@ -20,6 +20,10 @@
     line-height: 15px;
 }
 
+.terminal_monitor_message:focus {
+    outline: none;
+}
+
 .terminal_monitor_message > .message{
     color : #E6E6E6;
     margin : 0 0 0 1px;
