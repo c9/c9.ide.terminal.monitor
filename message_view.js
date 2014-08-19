@@ -46,10 +46,10 @@ define(function(require, exports, module) {
         function handlePreview(e) {
             e.preventDefault();
             tabManager.open({
-                editorType : "preview",
-                active     : true,
-                document   : {
-                    preview : {
+                editorType: "preview",
+                active: true,
+                document: {
+                    preview: {
                         path: e.target.innerText
                     }
                 }
