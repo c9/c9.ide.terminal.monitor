@@ -85,8 +85,9 @@ define(function(require, exports, module) {
                 containerNode.style.opacity = 1;
             });
             
-            document.addEventListener("mousedown", hide);
-            document.addEventListener("click", hide);
+            document.addEventListener("mousedown", hide, true);
+            document.addEventListener("keydown", hide, true);
+            tabManager.once("focusSync", hide);
             
             isVisible = true;
         }
@@ -100,7 +101,7 @@ define(function(require, exports, module) {
             contentNode.innerHTML = '';
             
             document.removeEventListener("mousedown", hide);
-            document.removeEventListener("click", hide);
+            document.removeEventListener("keydown", hide);
             
             isVisible = false;
         }
