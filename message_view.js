@@ -32,7 +32,6 @@ define(function(require, exports, module) {
             var html = require("text!./message_view.html");
             containerNode = ui.insertHtml(null, html, plugin)[0];
             contentNode = containerNode.querySelector(".message");
-            contentNode.addEventListener("click", handleClick);
         }
         
         function handleClick(e) {
@@ -57,6 +56,22 @@ define(function(require, exports, module) {
             }, function(err, tab) {});
         }
         
+        function connectEventHandlers() {
+            document.addEventListener("click", handleClick);
+            document.addEventListener("keydown", hide, true);
+            window.addEventListener('resize', hide);
+            tabManager.once("focusSync", hide);
+            tabManager.once("tabBeforeReparent", hide);
+        }
+        
+        function disconnectEventHandlers() {
+            document.removeEventListener("click", handleClick);
+            document.removeEventListener("keydown", hide, true);
+            window.removeEventListener('resize', hide);
+            tabManager.off("focusSync", hide);
+            tabManager.off("tabBeforeReparent", hide);
+        }
+        
         function show(message, referenceNode) {
             if (!containerNode)
                 return;
@@ -77,11 +92,7 @@ define(function(require, exports, module) {
                 containerNode.style.opacity = 1;
             });
             
-            document.addEventListener("click", handleClick);
-            document.addEventListener("keydown", hide, true);
-            window.addEventListener('resize', hide);
-            tabManager.once("focusSync", hide);
-            tabManager.once("tabBeforeReparent", hide);
+            connectEventHandlers();
             
             isVisible = true;
         }
@@ -94,12 +105,7 @@ define(function(require, exports, module) {
             containerNode.style.opacity = 0;
             contentNode.innerHTML = '';
             
-            document.removeEventListener("click", handleClick);
-            document.removeEventListener("keydown", hide, true);
-            window.removeEventListener('resize', hide);
-            tabManager.off("focusSync", hide);
-            tabManager.off("tabBeforeReparent", hide);
-            
+            disconnectEventHandlers();
             
             isVisible = false;
         }
