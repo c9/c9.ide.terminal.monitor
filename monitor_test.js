@@ -32,7 +32,7 @@ require([
             expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
         });
         it("catches generic (listening at) running", function() {
-            messageHandler.handleMessage("Server listening at http://localhost:8080/");
+            messageHandler.handleMessage("Server listening at http://0.0.0.0:8080/");
             expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
         });
         it("catches generic (is listening at) wrong port", function() {
@@ -40,7 +40,7 @@ require([
             expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
         });
         it("catches generic (is listening at) running", function() {
-            messageHandler.handleMessage("Server is listening at http://localhost:8080/");
+            messageHandler.handleMessage("Server is listening at http://0.0.0.0:8080/");
             expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
         });
         it("catches generic (is running on) wrong port", function() {
@@ -48,7 +48,7 @@ require([
             expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
         });
         it("catches generic (is running on) running", function() {
-            messageHandler.handleMessage("Server is running on http://localhost:8080/");
+            messageHandler.handleMessage("Server is running on http://0.0.0.0:8080/");
             expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
         });
         it("catches ionic wrong port", function() {
@@ -64,7 +64,7 @@ require([
             expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
         });
         it("catches meteor running", function() {
-            messageHandler.handleMessage("App running at: http://localhost:8080/");
+            messageHandler.handleMessage("App running at: http://0.0.0.0:8080/");
             expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
         });
         it("catches Webrick running", function() {
@@ -99,11 +99,6 @@ require([
         it("catches django error", function () {
             messageHandler.handleMessage("Error: You don't have permission to access that port.\n");
             expect(formatMessageSpy.calledWith(messages.django.wrongPortIP)).to.equal(true);
-        });
-        
-        it("catches permission denied for socket", function() {
-            messageHandler.handleMessage("Permission denied for socket: 0.0.0.0\n");
-            expect(formatMessageSpy.calledWith(messages.generic.bindToInternalIP)).to.equal(true);
         });
     });
         
