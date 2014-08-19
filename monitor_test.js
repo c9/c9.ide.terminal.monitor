@@ -26,7 +26,6 @@ require([
             messageView = { show: function() {} };
             messageHandler = new MessageHandler(matchers, messageView);
             formatMessageSpy = sinon.spy(messageView, "show");
-            
         });
         it("catches generic (listening at) wrong port", function() {
             messageHandler.handleMessage("Server listening at http://localhost:3000/");
