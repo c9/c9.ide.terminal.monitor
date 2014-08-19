@@ -64,13 +64,13 @@ define(function(require, exports, module) {
             var referenceBoundingRect = referenceNode.getBoundingClientRect();
             var offset = { top: 8, left: 8, right: 8 };
             var top = referenceBoundingRect.top + offset.top;
-            var left = referenceBoundingRect.left + offset.left;
             var width = referenceBoundingRect.width - offset.right - offset.left;
+            var right = window.innerWidth - referenceBoundingRect.right + offset.right;
             
             contentNode.innerHTML = message;
             containerNode.style.display = 'block';
             containerNode.style.top = top + 'px';
-            containerNode.style.left = left + 'px';
+            containerNode.style.right = right + 'px';
             containerNode.style.width = width + 'px';
             
             setTimeout(function() {
