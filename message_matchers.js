@@ -39,7 +39,7 @@ define(function(require, exports, module) {
             },
             {
                 // Generic correct port
-                pattern: /server(?: is | )(?:listening|running) (?:at|on).*?(?=8080)/i,
+                pattern: /server(?: is | )(?:listening|running) (?:at|on).*?(?=0.0.0.0:8080)/i,
                 message: messages.generic.appRunning
             },
             {
@@ -49,7 +49,7 @@ define(function(require, exports, module) {
             },
             {
                 // Ionic, Meteor correct port
-                pattern: /(Running dev server:|App running at:).*?:(?=8080)/,
+                pattern: /(Running dev server:|App running at:).*?(?=0.0.0.0:8080)/,
                 message: messages.generic.appRunning
             },
             {
@@ -69,7 +69,7 @@ define(function(require, exports, module) {
             },
             {
                 // Django correct port
-                pattern: /Starting development server at.*?(?=8080)/i,
+                pattern: /Starting development server at.*?(?=0.0.0.0:8080)/i,
                 message: messages.generic.appRunning
             },
             {
