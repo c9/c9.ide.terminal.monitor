@@ -31,6 +31,8 @@ define(function(require, exports, module) {
             
         };
         
+        //Starting development server at http://0.0.0.0:8080/
+        
         var matchers = [
             {
                 // Generic
@@ -68,8 +70,18 @@ define(function(require, exports, module) {
                 message: messages.node.wrongPortIP
             },
             {
-                // Django app
+                // Django correct port
+                patterm: /Starting development server at.*?(?=8080)/i,
+                message: messages.generic.appRunning
+            },
+            {
+                // Django app wrong port
                 pattern: /Error: You don't have permission to access that port./,
+                message: messages.django.wrongPortIP
+            },
+            {
+                // Django app wrong port
+                pattern: /Error: That port is already in use./,
                 message: messages.django.wrongPortIP
             },
             {

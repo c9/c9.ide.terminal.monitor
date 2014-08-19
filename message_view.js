@@ -40,10 +40,7 @@ define(function(require, exports, module) {
             var html = require("text!./message_view.html");
             containerNode = ui.insertHtml(null, html, plugin)[0];
             contentNode = containerNode.querySelector(".message");
-
-            containerNode.addEventListener("blur", hide);
             contentNode.addEventListener("click", handleClick);
-            document.addEventListener("click", hide);
         }
         
         function handleClick(e) {
@@ -87,7 +84,10 @@ define(function(require, exports, module) {
             setTimeout(function() {
                 containerNode.style.opacity = 1;
             });
-            containerNode.focus();
+            
+            document.addEventListener("mousedown", hide);
+            document.addEventListener("click", hide);
+            
             isVisible = true;
         }
         
@@ -98,6 +98,10 @@ define(function(require, exports, module) {
             containerNode.style.display = 'none';
             containerNode.style.opacity = 0;
             contentNode.innerHTML = '';
+            
+            document.removeEventListener("mousedown", hide);
+            document.removeEventListener("click", hide);
+            
             isVisible = false;
         }
         
