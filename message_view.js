@@ -79,6 +79,7 @@ define(function(require, exports, module) {
             
             document.addEventListener("click", handleClick);
             document.addEventListener("keydown", hide, true);
+            window.addEventListener('resize', hide);
             tabManager.once("focusSync", hide);
             tabManager.once("tabBeforeReparent", hide);
             
@@ -95,6 +96,7 @@ define(function(require, exports, module) {
             
             document.removeEventListener("click", handleClick);
             document.removeEventListener("keydown", hide, true);
+            window.removeEventListener('resize', hide);
             tabManager.off("focusSync", hide);
             tabManager.off("tabBeforeReparent", hide);
             
