@@ -33,21 +33,18 @@ define(function(require, exports, module) {
             var seenUpTo = 0;
             var hasResizeCompleted = false;
             
-            // 1. On first draw we want the seenUpTo count reflect the amount of lines with output and not empty ones.
-            
-            // Make sure we mark newlines which we already received as already handled;
             terminal.on("newline", function(e) {
                 var y = e.y;
                 var linesIndex = y + e.ybase - 1;
                 var line = e.lines[linesIndex].map(function(character) { return character[1]; }).join("");
-
+               
                 if (!hasResizeCompleted) {
                     if (line.length) {
                         seenUpTo = e.y;
                     }
                     return;
                 }
-                    
+
                 if (y - 1 > seenUpTo) return;
                 seenUpTo = y;
                 
