@@ -15,14 +15,6 @@ define(function(require, exports, module) {
         var plugin = new Plugin("Ajax.org", main.consumes);
         var css = require("text!./message_view.css");
         
-        tabManager.on("tabDestroy", function() {
-            hide();
-        });
-        
-        tabManager.on("tabBeforeReparent", function() {
-            hide();
-        });
-
         var containerNode, contentNode, isVisible = false;
 
         var loaded = false;
@@ -85,9 +77,10 @@ define(function(require, exports, module) {
                 containerNode.style.opacity = 1;
             });
             
-            document.addEventListener("mousedown", hide, true);
+            document.addEventListener("click", handleClick);
             document.addEventListener("keydown", hide, true);
             tabManager.once("focusSync", hide);
+            tabManager.once("tabBeforeReparent", hide);
             
             isVisible = true;
         }
@@ -100,8 +93,11 @@ define(function(require, exports, module) {
             containerNode.style.opacity = 0;
             contentNode.innerHTML = '';
             
-            document.removeEventListener("mousedown", hide);
-            document.removeEventListener("keydown", hide);
+            document.removeEventListener("click", handleClick);
+            document.removeEventListener("keydown", hide, true);
+            tabManager.off("focusSync", hide);
+            tabManager.off("tabBeforeReparent", hide);
+            
             
             isVisible = false;
         }
