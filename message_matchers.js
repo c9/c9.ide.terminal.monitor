@@ -15,7 +15,7 @@ define(function(require, exports, module) {
         
         var messages = {
             generic: {
-                wrongPortIP: prefix + wrongPortIP + "Try passing $PORT and $IP to properly launch your application. You can find more information <a href='https://docs.c9.io/running_and_debugging_code.html'>in our docs.</a>",
+                wrongPortIP: prefix + wrongPortIP + "Try passing $PORT and $IP to properly launch your application. You can find more information <a href='https://docs.c9.io/running_and_debugging_code.html' target='_blank'>in our docs.</a>",
                 appRunning: prefix + "Your code is running at <a href='javascript://' data-type='preview'>https://" + c9.hostname + "</a>",
                 bindToInternalIP: prefix + wrongPortIP + "Only binding to the internal IP configured in $IP is supported."
             },
@@ -34,7 +34,7 @@ define(function(require, exports, module) {
         var matchers = [
             {
                 // Generic
-                pattern: /server(?: is | )(?:listening|running) (?:at|on).*?(?=\d{4})(?!8080)/i,
+                pattern: /server(?: is | )(?:listening|running) (?:at|on)((?!0.0.0.0:8080).)*$/i,
                 message: messages.generic.wrongPortIP
             },
             {
@@ -44,7 +44,7 @@ define(function(require, exports, module) {
             },
             {
                 // Ionic, Meteor wrong port
-                pattern: /(Running dev server:|App running at:).*?:(?=\d{4})(?!8080)/,
+                pattern: /(Running dev server:|App running at:)((?!0.0.0.0:8080).)*$/,
                 message: messages.generic.wrongPortIP
             },
             {

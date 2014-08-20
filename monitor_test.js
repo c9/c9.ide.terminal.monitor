@@ -27,8 +27,16 @@ require([
             messageHandler = new MessageHandler(matchers, messageView);
             formatMessageSpy = sinon.spy(messageView, "show");
         });
-        it("catches generic (listening at) wrong port", function() {
+        it("catches generic (listening at) wrong IP", function() {
             messageHandler.handleMessage("Server listening at http://localhost:3000/");
+            expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
+        });
+        it("catches generic (listening at) wrong port", function() {
+            messageHandler.handleMessage("Server listening at http://0.0.0.0:8081/");
+            expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
+        });
+        it("catches generic (listening at) wrong port / IP", function() {
+            messageHandler.handleMessage("Server listening at http://127.0.0.1:8081/");
             expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
         });
         it("catches generic (listening at) running", function() {
