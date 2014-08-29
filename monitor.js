@@ -44,6 +44,10 @@ define(function(require, exports, module) {
             terminal.on("newline", function(e) {
                 var y = e.y;
                 var linesIndex = y + e.ybase - 1;
+                
+                if (!e.lines[linesIndex])
+                    return;
+                
                 var line = e.lines[linesIndex].map(function(character) { return character[1]; }).join("");
                 
                 if (!hasResizeCompleted) {
