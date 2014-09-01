@@ -15,6 +15,7 @@ define(function(require, exports, module) {
         
         var MessageHandler = require("./message_handler");
         var messageMatchers = require("./message_matchers")(c9);
+        var _ = require('lodash');
         
         var plugin = new Plugin("Ajax.org", main.consumes);
         var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
@@ -45,7 +46,7 @@ define(function(require, exports, module) {
                 var y = e.y;
                 var linesIndex = y + e.ybase - 1;
                 
-                if (!e.lines[linesIndex])
+                if (!_.isArray(e.lines[linesIndex]))
                     return;
                 
                 var line = e.lines[linesIndex].map(function(character) { return character[1]; }).join("");
