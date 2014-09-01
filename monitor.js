@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
     main.consumes = [
         "c9", "Plugin", "editors", "dialog.error",
-        "terminal.monitor.message_view", "tabManager"
+        "terminal.monitor.message_view", "tabManager", "error_handler"
     ];
     main.provides = ["terminal.monitor"];
     return main;
@@ -12,6 +12,7 @@ define(function(require, exports, module) {
         var editors = imports.editors;
         var messageView = imports["terminal.monitor.message_view"];
         var tabManager = imports.tabManager;
+        var errorHandler = imports.error_handler;
         
         var MessageHandler = require("./message_handler");
         var messageMatchers = require("./message_matchers")(c9);
@@ -46,8 +47,14 @@ define(function(require, exports, module) {
                 var y = e.y;
                 var linesIndex = y + e.ybase - 1;
                 
-                if (!_.isArray(e.lines[linesIndex]))
+                if (!_.isArray(e.lines[linesIndex])) {
+                    errorHandler.reportError(new Error("Can not access line item in lines array"), {
+                        y: e.y,
+                        ybase: e.ybase,
+                        linesCnt: e.lines ? e.lines.length : undefined
+                    }, ["terminal.monitor"]);
                     return;
+                }
                 
                 var line = e.lines[linesIndex].map(function(character) { return character[1]; }).join("");
                 
