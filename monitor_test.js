@@ -67,6 +67,10 @@ require([
             messageHandler.handleMessage("Running dev server: http://0.0.0.0:8080/");
             expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
         });
+        it("catches ionic running with different $IP", function() {
+            messageHandler.handleMessage("Running dev server: http://127.101.12.0:8080/");
+            expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
+        });
         it("catches meteor wrong port", function() {
             messageHandler.handleMessage("App running at: http://localhost:3000/");
             expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);

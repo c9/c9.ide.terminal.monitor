@@ -34,22 +34,32 @@ define(function(require, exports, module) {
         var matchers = [
             {
                 // Generic
-                pattern: /server(?: is | )(?:listening|running) (?:at|on)((?!0.0.0.0:8080).)*$/i,
+                pattern: /server(?: is | )(?:listening|running) (?:at|on)((?!0\.0\.0\.0:8080).)*$/i,
                 message: messages.generic.wrongPortIP
             },
             {
                 // Generic correct port
-                pattern: /server(?: is | )(?:listening|running) (?:at|on).*?(?=0.0.0.0:8080)/i,
+                pattern: /server(?: is | )(?:listening|running) (?:at|on).*?(?=0\.0\.0\.0:8080)/i,
                 message: messages.generic.appRunning
             },
             {
-                // Ionic, Meteor wrong port
-                pattern: /(Running dev server:|App running at:)((?!0.0.0.0:8080).)*$/,
+                // Meteor wrong port
+                pattern: /(App running at:)((?!0\.0\.0\.0:8080).)*$/,
                 message: messages.generic.wrongPortIP
             },
             {
-                // Ionic, Meteor correct port
-                pattern: /(Running dev server:|App running at:).*?(?=0.0.0.0:8080)/,
+                // Meteor correct port
+                pattern: /(App running at:).*?(?=0\.0\.0\.0:8080)/,
+                message: messages.generic.appRunning
+            },
+            {
+                // Ionic wrong port
+                pattern: /(Running dev server:)((?!0\.0\.0\.0:8080).)*$/,
+                message: messages.generic.wrongPortIP
+            },
+            {
+                // Ionic correct port
+                pattern: /(Running dev server:).*?(?=\d+\.\d+\.\d+\.\d+:8080)/,
                 message: messages.generic.appRunning
             },
             {
