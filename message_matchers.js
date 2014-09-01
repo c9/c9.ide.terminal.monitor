@@ -54,7 +54,7 @@ define(function(require, exports, module) {
             },
             {
                 // Ionic wrong port
-                pattern: /(Running dev server:)((?!0\.0\.0\.0:8080).)*$/,
+                pattern: /(Running dev server:)((?!\d+\.\d+\.\d+\.\d+:8080).)*$/,
                 message: messages.generic.wrongPortIP
             },
             {
