@@ -84,6 +84,11 @@ require([
                 INFO  WEBrick::HTTPServer#start: pid=5462 port=8080");
             expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
         });
+        it("catches Webrick wrong port", function() {
+            messageHandler.handleMessage("mostafaeweda@demo-project\r\n\
+                INFO  WEBrick::HTTPServer#start: pid=5462 port=3000");
+            expect(formatMessageSpy.calledWith(messages.rails.wrongPortIP)).to.equal(true);
+        });
         it("catches rails/sinatra address in use error", function() {
             messageHandler.handleMessage("WARN  TCPServer Error: Address already in use - bind(2)");
             expect(formatMessageSpy.calledWith(messages.rails.wrongPortIP)).to.equal(true);

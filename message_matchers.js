@@ -63,9 +63,14 @@ define(function(require, exports, module) {
                 message: messages.generic.appRunning
             },
             {
-                // WEBrick
-                pattern: /INFO\ \ WEBrick::HTTPServer#start: pid=\d+ port=\d+/,
+                // WEBrick correct port
+                pattern: /INFO\ \ WEBrick::HTTPServer#start: pid=\d+ port=8080/,
                 message: messages.generic.appRunning
+            },
+            {
+                // WEBrick wrong port
+                pattern: /INFO\ \ WEBrick::HTTPServer#start: pid=\d+ port=(?!8080)/,
+                message: messages.rails.wrongPortIP
             },
             {
                 // Rails or Sinatra
