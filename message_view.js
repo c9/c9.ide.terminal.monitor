@@ -14,8 +14,9 @@ define(function(require, exports, module) {
 
         var plugin = new Plugin("Ajax.org", main.consumes);
         var css = require("text!./message_view.css");
+        var html = require("text!./message_view.html");
         
-        var containerNode, contentNode, isVisible = false;
+        var messageStack = [];
 
         var loaded = false;
         function load(){
@@ -27,12 +28,7 @@ define(function(require, exports, module) {
             draw();
         }
 
-        function draw(){
-            // Create HTML elements
-            var html = require("text!./message_view.html");
-            containerNode = ui.insertHtml(null, html, plugin)[0];
-            contentNode = containerNode.querySelector(".message");
-        }
+        function draw() {}
         
         function handleClick(e) {
             switch (e.target.getAttribute("data-type")) {
@@ -72,42 +68,79 @@ define(function(require, exports, module) {
             tabManager.off("tabBeforeReparent", hide);
         }
         
-        function show(message, referenceNode) {
-            if (!containerNode)
-                return;
-
+        function isAlreadyShowingMessage(messages, text) {
+            return messages.some(function(message) {
+                return message.text == text;
+            });
+        }
+        
+        function showMessageNode(messageNode, referenceNode, referenceMessage) {
             var referenceBoundingRect = referenceNode.getBoundingClientRect();
-            var offset = { top: 8, left: 8, right: 8 };
-            var top = referenceBoundingRect.top + offset.top;
+            var offset = { top: 8, left: 8, right: 8, bottom: 8 };
             var width = referenceBoundingRect.width - offset.right - offset.left;
             var right = window.innerWidth - referenceBoundingRect.right + offset.right;
-            
-            contentNode.innerHTML = message;
-            containerNode.style.display = 'block';
-            containerNode.style.top = top + 'px';
-            containerNode.style.right = right + 'px';
-            containerNode.style.width = width + 'px';
+            var top;
+            if (referenceMessage) {
+                top = referenceMessage.domNode.getBoundingClientRect().bottom + offset.bottom;
+            } else {
+                top = referenceBoundingRect.top + offset.top;
+            }
+            messageNode.style.display = 'block';
+            messageNode.style.top = top + 'px';
+            messageNode.style.right = right + 'px';
+            messageNode.style.width = width + 'px';
             
             setTimeout(function() {
-                containerNode.style.opacity = 1;
+                messageNode.style.opacity = 1;
+            });
+        }
+        
+        function createMessageNode(text) {
+            var messageNode = ui.insertHtml(null, html, plugin)[0];
+            var contentNode = messageNode.querySelector(".message");
+            contentNode.innerHTML = text;
+            return messageNode;
+        }
+        
+        function show(text, referenceNode) {
+            if (!referenceNode)
+                return;
+               
+            var messages = messageStack.filter(function(message) {
+                return message.referenceNode == referenceNode;
             });
             
-            connectEventHandlers();
+            if (isAlreadyShowingMessage(messages, text))
+                return;
+                
+            var messageNode = createMessageNode(text);
             
-            isVisible = true;
+            var lastShownMessage = messages[messages.length-1];
+            showMessageNode(messageNode, referenceNode, lastShownMessage);
+            
+            if (messageStack.length == 1)
+                connectEventHandlers();
+            
+            messageStack.push({
+                referenceNode: referenceNode,
+                domNode: messageNode,
+                text: text
+            });
         }
         
         function hide() {
-            if (!containerNode || !isVisible)
+            if (!messageStack.length)
                 return;
             
-            containerNode.style.display = 'none';
-            containerNode.style.opacity = 0;
-            contentNode.innerHTML = '';
+            messageStack.forEach(function(message) {
+                message.domNode.style.display = 'none';
+                message.domNode.style.opacity = 0;
+                message.domNode.innerHTML = '';
+                message.domNode.parentNode.removeChild(message.domNode);
+            });
             
+            messageStack = [];
             disconnectEventHandlers();
-            
-            isVisible = false;
         }
         
         plugin.on("load", function(){

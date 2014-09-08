@@ -126,7 +126,27 @@ require([
         it("catches grunt-serve wrong port", function() {
             messageHandler.handleMessage("Server is running on port 9000...\n");
             expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
-        })
+        });
+        
+        it("catches grunt-reload running", function() {
+            messageHandler.handleMessage("Proxying http://0.0.0.0:8080/");
+            expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
+        });
+        
+        it("catches grunt-reload wrong port", function() {
+            messageHandler.handleMessage("Proxying http://0.0.0.0:9999/");
+            expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
+            messageHandler.handleMessage("Proxying http://localhost:12345/");
+            expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
+        });
+        
+        it("catch reload server not supported", function() {
+            messageHandler.handleMessage("reload server running at http://localhost:35729\n");
+            expect(formatMessageSpy.calledWith(messages.generic.noLiveReload)).to.equal(true);
+            messageHandler.handleMessage("reload server running at http://0.0.0.0:9000\n");
+            expect(formatMessageSpy.calledWith(messages.generic.noLiveReload)).to.equal(true);
+        });
+        
     });
         
     onload && onload();

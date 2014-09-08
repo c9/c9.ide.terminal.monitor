@@ -17,7 +17,8 @@ define(function(require, exports, module) {
             generic: {
                 wrongPortIP: prefix + wrongPortIP + "Try passing $PORT and $IP to properly launch your application. You can find more information <a href='https://docs.c9.io/running_and_debugging_code.html' target='_blank'>in our docs.</a>",
                 appRunning: prefix + "Your code is running at <a href='javascript://' data-type='preview'>https://" + c9.hostname + "</a>",
-                bindToInternalIP: prefix + wrongPortIP + "Only binding to the internal IP configured in $IP is supported."
+                bindToInternalIP: prefix + wrongPortIP + "Only binding to the internal IP configured in $IP is supported.",
+                noLiveReload: prefix + "We currently only support listening on one port. Opening up a second port for live-reloading is currently not possible."
             },
             rails: {
                 wrongPortIP: prefix + wrongPortIP + "For rails, use: 'rails s -p $PORT -b $IP'. For Sinatra, use: ruby app.rb -p $PORT -o $IP'."
@@ -28,18 +29,17 @@ define(function(require, exports, module) {
             django: {
                 wrongPortIP: prefix + wrongPortIP + " Use './manage.py runserver $IP:$PORT' to run your Django application."
             }
-            
         };
         
         var matchers = [
             {
                 // Generic
-                pattern: /server(?: is | )(?:listening|running) (?:at|on)((?!0\.0\.0\.0:8080).)*$/i,
+                pattern: /^(?!reload )server(?: is | )(?:listening|running) (?:at|on)((?!0\.0\.0\.0:8080).)*$/i,
                 message: messages.generic.wrongPortIP
             },
             {
                 // Generic correct port
-                pattern: /server(?: is | )(?:listening|running) (?:at|on).*?(?=0\.0\.0\.0:8080)/i,
+                pattern: /^(?!reload )server(?: is | )(?:listening|running) (?:at|on).*?(?=0\.0\.0\.0:8080)/i,
                 message: messages.generic.appRunning
             },
             {
@@ -51,6 +51,21 @@ define(function(require, exports, module) {
                 // grunt-serve correct port
                 pattern: /Server is running on port 8080/i,
                 message: messages.generic.appRunning
+            },
+            {
+                // grunt-reload
+                pattern: /^Proxying http:\/\/(?!0\.0\.0\.0:8080)/i,
+                message: messages.generic.wrongPortIP
+            },
+            {
+                // grunt-reload
+                pattern: /^Proxying http:\/\/(?=0\.0\.0\.0:8080)/i,
+                message: messages.generic.appRunning
+            },
+            {
+                // grunt no support for live-reload
+                pattern: /^reload server running at http:\/\/.*?:\d{4,5}/i,
+                message: messages.generic.noLiveReload
             },
             {
                 // Meteor wrong port
