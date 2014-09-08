@@ -43,6 +43,16 @@ define(function(require, exports, module) {
                 message: messages.generic.appRunning
             },
             {
+                // grunt-serve correct port
+                pattern: /Server is running on port (?!8080)/i,
+                message: messages.generic.wrongPortIP
+            },
+            {
+                // grunt-serve correct port
+                pattern: /Server is running on port 8080/i,
+                message: messages.generic.appRunning
+            },
+            {
                 // Meteor wrong port
                 pattern: /(App running at:)((?!0\.0\.0\.0:8080).)*$/,
                 message: messages.generic.wrongPortIP

@@ -117,6 +117,16 @@ require([
             messageHandler.handleMessage("Error: You don't have permission to access that port.\n");
             expect(formatMessageSpy.calledWith(messages.django.wrongPortIP)).to.equal(true);
         });
+        
+        it("catches grunt-serve running", function() {
+            messageHandler.handleMessage("Server is running on port 8080...\n");
+            expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
+        });
+        
+        it("catches grunt-serve wrong port", function() {
+            messageHandler.handleMessage("Server is running on port 9000...\n");
+            expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
+        })
     });
         
     onload && onload();
