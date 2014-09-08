@@ -105,7 +105,7 @@ define(function(require, exports, module) {
         function show(text, referenceNode) {
             if (!referenceNode)
                 return;
-               
+
             var messages = messageStack.filter(function(message) {
                 return message.referenceNode == referenceNode;
             });
@@ -118,14 +118,14 @@ define(function(require, exports, module) {
             var lastShownMessage = messages[messages.length-1];
             showMessageNode(messageNode, referenceNode, lastShownMessage);
             
-            if (messageStack.length == 1)
-                connectEventHandlers();
-            
             messageStack.push({
                 referenceNode: referenceNode,
                 domNode: messageNode,
                 text: text
             });
+            
+            if (messageStack.length == 1)
+                connectEventHandlers();
         }
         
         function hide() {
