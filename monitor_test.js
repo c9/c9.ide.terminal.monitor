@@ -100,9 +100,12 @@ require([
                     at errnoException (net.js:670:11)\n\
                     at Array.0 (net.js:771:26)\n\
                     at EventEmitter._tickCallback (node.js:190:38)\n");
-            expect(formatMessageSpy.calledWith(messages.node.wrongPortIP)).to.equal(true);
+            expect(formatMessageSpy.calledWith(messages.generic.addressInUse)).to.equal(true);
         });
-    
+        it("catches generic port already in use error", function() {
+            messageHandler.handleMessage("Error: That port is already in use\n");
+            expect(formatMessageSpy.calledWith(messages.generic.addressInUse)).to.equal(true);
+        });
         it("catches node permission error", function() {
             messageHandler.handleMessage("events.js:48\n\
                     throw arguments[1]; // Unhandled 'error' event\n\
@@ -110,7 +113,7 @@ require([
                     at errnoException (net.js:670:11)\n\
                     at Array.0 (net.js:771:26)\n\
                     at EventEmitter._tickCallback (node.js:190:38)\n");
-            expect(formatMessageSpy.calledWith(messages.node.wrongPortIP)).to.equal(true);
+            expect(formatMessageSpy.calledWith(messages.generic.addressInUse)).to.equal(true);
         });
         
         it("catches django error", function () {
