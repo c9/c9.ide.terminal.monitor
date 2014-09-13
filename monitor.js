@@ -56,7 +56,9 @@ define(function(require, exports, module) {
                     return;
                 }
                 
-                var line = e.lines[linesIndex].map(function(character) { return character[1]; }).join("");
+                var line = e.lines[linesIndex].map(function(character) {
+                    return character && character[1];
+                }).join("");
                 
                 if (!hasResizeCompleted) {
                     if (line.length) {
@@ -70,7 +72,9 @@ define(function(require, exports, module) {
                 while (seenUpTo < y) {
                     seenUpTo++;
                     var tmpLinesIndex = seenUpTo + e.ybase - 1;
-                    var tmpLine = e.lines[tmpLinesIndex].map(function(character) { return character[1]; }).join("");
+                    var tmpLine = e.lines[tmpLinesIndex].map(function(character) {
+                        return character && character[1];
+                    }).join("");
                     handleMessage(tmpLine);
                 }
 
