@@ -104,8 +104,17 @@ define(function(require, exports, module) {
             },
             {
                 // Node app
-                pattern: /Error: listen (?:EADDRINUSE|EACCES|EADDRNOTAVAIL)/,
+                pattern: /Error: listen (?:EACCES|EADDRNOTAVAIL)/,
                 message: messages.node.wrongPortIP
+            },
+            {
+                // Node address in use
+                pattern: /Error: listen EADDRINUSE/,
+                message: messages.node.wrongPortIP,
+                action: {
+                    cmd: "kill -9 $(lsof -i:$PORT -t)",
+                    label: "Kill processes"
+                }
             },
             {
                 // Django correct port
