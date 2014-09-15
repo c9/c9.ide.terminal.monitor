@@ -123,7 +123,7 @@ define(function(require, exports, module) {
                 message: messages.django.wrongPortIP,
                 action: {
                     cmd: 'kill -9 $(lsof -i:$PORT -t)',
-                    label: 'Kill proccesses'
+                    label: 'Kill processes'
                 }
             }
         ];
