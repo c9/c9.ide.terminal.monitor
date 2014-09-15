@@ -1,18 +1,23 @@
 define(function(require, exports, module) {
     main.consumes = [
         "c9", "Plugin", "editors", "dialog.error",
-        "terminal.monitor.message_view", "tabManager", "error_handler"
+        "terminal.monitor.message_view", "tabManager", "error_handler",
+        "proc"
     ];
     main.provides = ["terminal.monitor"];
     return main;
 
     function main(options, imports, register) {
+        var BASEPATH = options.basePath || "/";
+        var BASHBIN = options.bashBin ||  "/bin/bash";
+        
         var c9 = imports.c9;
         var Plugin = imports.Plugin;
         var editors = imports.editors;
         var messageView = imports["terminal.monitor.message_view"];
         var tabManager = imports.tabManager;
         var errorHandler = imports.error_handler;
+        var proc = imports.proc;
         
         var MessageHandler = require("./message_handler");
         var messageMatchers = require("./message_matchers")(c9);
@@ -20,6 +25,12 @@ define(function(require, exports, module) {
         
         var plugin = new Plugin("Ajax.org", main.consumes);
         var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
+        
+        messageView.on('action', function(cmd) {
+            var process = proc.execFile(BASHBIN, {
+                args: ['-c', cmd]
+            }, function() {});
+        })
         
         editors.on("create", function(e) {
             if (!e.editor || e.editor.type !== "terminal")
