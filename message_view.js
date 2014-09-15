@@ -25,7 +25,7 @@ define(function(require, exports, module) {
             loaded = true;
             
             // Load CSS
-            ui.insertCss(css, plugin);
+            ui.insertCss(css, options.staticPrefix, plugin);
             
             tabManager.on("tabAfterReparent", function(item) {
                 repositionMessages(item.tab);
