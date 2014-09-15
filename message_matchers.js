@@ -120,7 +120,11 @@ define(function(require, exports, module) {
             {
                 // Django app wrong port
                 pattern: /Error: That port is already in use./,
-                message: messages.django.wrongPortIP
+                message: messages.django.wrongPortIP,
+                action: {
+                    cmd: 'kill -9 $(lsof -i:$PORT -t)',
+                    label: 'Kill proccesses'
+                }
             }
         ];
         return {

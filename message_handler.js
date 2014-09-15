@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 
     proto.handleMessage = function(data, referenceNode) {
         this.messageMatchers.forEach(function(trigger) {
-            trigger.pattern.test(data) && this.messageView.show(trigger.message, referenceNode);
+            trigger.pattern.test(data) && this.messageView.show(trigger.message, trigger.action, referenceNode);
         }, this);
     };
     

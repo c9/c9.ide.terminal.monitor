@@ -102,7 +102,16 @@ define(function(require, exports, module) {
             return messageNode;
         }
         
-        function show(text, referenceNode) {
+        function setupMessageAction(messageNode, action) {
+            if (!action)
+                return;
+            
+            var actionNode = messageNode.querySelector(".cmd");
+            actionNode.innerHTML = action.label;
+            actionNode.style.display = 'block';
+        }
+        
+        function show(text, action, referenceNode) {
             if (!referenceNode)
                 return;
 
@@ -114,6 +123,7 @@ define(function(require, exports, module) {
                 return;
                 
             var messageNode = createMessageNode(text);
+            setupMessageAction(messageNode, action);
             
             var lastShownMessage = messages[messages.length-1];
             showMessageNode(messageNode, referenceNode, lastShownMessage);

@@ -37,3 +37,9 @@
 .terminal_monitor_message > .message a {
     color: rgb(197, 213, 23);
 }
+
+.terminal_monitor_message .cmd {
+    display: none;
+    margin: 5px 0 0 5px;
+    float: right;
+}
