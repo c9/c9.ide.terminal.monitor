@@ -63,22 +63,6 @@ define(function(require, exports, module) {
             }, function(err, tab) {});
         }
         
-        function connectEventHandlers() {
-            // document.addEventListener("click", handleClick);
-            // document.addEventListener("keydown", hide, true);
-            // window.addEventListener('resize', hide);
-            // tabManager.once("focusSync", hide);
-            // tabManager.once("tabBeforeReparent", hide);
-        }
-        
-        function disconnectEventHandlers() {
-            // document.removeEventListener("click", handleClick);
-            // document.removeEventListener("keydown", hide, true);
-            // window.removeEventListener('resize', hide);
-            // tabManager.off("focusSync", hide);
-            // tabManager.off("tabBeforeReparent", hide);
-        }
-        
         function isAlreadyShowingMessage(messages, text) {
             return messages.some(function(message) {
                 return message.text == text;
