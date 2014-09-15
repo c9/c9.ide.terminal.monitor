@@ -106,12 +106,12 @@ define(function(require, exports, module) {
             {
                 // Node app
                 pattern: /Error: listen (?:EACCES|EADDRNOTAVAIL)/,
-                message: messages.node.wrongPortIP
+                message: messages.generic.addressInUse
             },
             {
                 // Node address in use
                 pattern: /Error: listen EADDRINUSE/,
-                message: messages.node.wrongPortIP,
+                message: messages.generic.addressInUse,
                 action: {
                     cmd: "kill -9 $(lsof -i:$PORT -t)",
                     label: "Kill processes"
@@ -129,8 +129,8 @@ define(function(require, exports, module) {
             },
             {
                 // Django app wrong port
-                pattern: /Error: That port is already in use./,
-                message: messages.django.wrongPortIP,
+                pattern: /Error: That port is already in use/,
+                message: messages.generic.addressInUse,
                 action: {
                     cmd: "kill -9 $(lsof -i:$PORT -t)",
                     label: "Kill processes"
