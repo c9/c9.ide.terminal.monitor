@@ -10,8 +10,6 @@ define(function(require, exports, module) {
     
     module.exports = function(c9) {
         
-        var PORT = c9.port || 8080;
-        
         var prefix = '<strong>Cloud9 Help</strong> ';
         var wrongPortIP = "You may be using the wrong PORT & IP for your server application.";
         
@@ -124,7 +122,7 @@ define(function(require, exports, module) {
                 pattern: /Error: That port is already in use./,
                 message: messages.django.wrongPortIP,
                 action: {
-                    cmd: "kill -9 $(lsof -i:" + PORT + " -t)",
+                    cmd: "kill -9 $(lsof -i:$PORT -t)",
                     label: "Kill processes"
                 }
             }

@@ -26,9 +26,9 @@ define(function(require, exports, module) {
         var plugin = new Plugin("Ajax.org", main.consumes);
         var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
         
-        messageView.on('action', function(cmd) {
-            var process = proc.execFile(BASHBIN, {
-                args: ['-c', cmd]
+        messageView.on("action", function(cmd) {
+            proc.execFile(BASHBIN, {
+                args: ["--login", "-c", cmd]
             }, function() {});
         })
         
