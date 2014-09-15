@@ -43,3 +43,10 @@
     margin: 5px 0 0 5px;
     float: right;
 }
+
+.terminal_monitor_message .close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: #fff;
+}
