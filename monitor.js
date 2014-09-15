@@ -8,7 +8,6 @@ define(function(require, exports, module) {
     return main;
 
     function main(options, imports, register) {
-        var BASEPATH = options.basePath || "/";
         var BASHBIN = options.bashBin ||  "/bin/bash";
         
         var c9 = imports.c9;
