@@ -105,6 +105,7 @@ define(function(require, exports, module) {
             var messageNode = ui.insertHtml(null, html, plugin)[0];
             var contentNode = messageNode.querySelector(".message");
             contentNode.innerHTML = text;
+            contentNode.onclick = handleClick;
             return messageNode;
         }
         
