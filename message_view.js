@@ -29,7 +29,17 @@ define(function(require, exports, module) {
             draw();
         }
 
-        function draw() {}
+        function draw() {
+            var beforeReparentNode, afterReparentNode;
+            tabManager.on("tabBeforeReparent", function(tab) {
+                beforeReparentNode = tab.tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
+            });
+            
+            tabManager.on("tabAfterReparent", function(tab) {
+                afterReparentNode = tab.tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
+                moveMessages(beforeReparentNode, afterReparentNode);
+            });
+        }
         
         function handleClick(e) {
             switch (e.target.getAttribute("data-type")) {
@@ -54,19 +64,19 @@ define(function(require, exports, module) {
         }
         
         function connectEventHandlers() {
-            document.addEventListener("click", handleClick);
-            document.addEventListener("keydown", hide, true);
-            window.addEventListener('resize', hide);
-            tabManager.once("focusSync", hide);
-            tabManager.once("tabBeforeReparent", hide);
+            // document.addEventListener("click", handleClick);
+            // document.addEventListener("keydown", hide, true);
+            // window.addEventListener('resize', hide);
+            // tabManager.once("focusSync", hide);
+            // tabManager.once("tabBeforeReparent", hide);
         }
         
         function disconnectEventHandlers() {
-            document.removeEventListener("click", handleClick);
-            document.removeEventListener("keydown", hide, true);
-            window.removeEventListener('resize', hide);
-            tabManager.off("focusSync", hide);
-            tabManager.off("tabBeforeReparent", hide);
+            // document.removeEventListener("click", handleClick);
+            // document.removeEventListener("keydown", hide, true);
+            // window.removeEventListener('resize', hide);
+            // tabManager.off("focusSync", hide);
+            // tabManager.off("tabBeforeReparent", hide);
         }
         
         function isAlreadyShowingMessage(messages, text) {
@@ -123,12 +133,26 @@ define(function(require, exports, module) {
         }
         
         function repositionMessages(referenceNode) {
-            messageStack.forEach(function(message, index) {
+            var messages = messageStack.filter(function(message) {
+                return message.referenceNode == referenceNode;
+            });
+            
+            messages.forEach(function(message, index) {
                 if (message.referenceNode != referenceNode)
                     return;
                     
                 showMessageNode(message.domNode, message.referenceNode, messageStack[index-1]);
             });
+        }
+        
+        function moveMessages(beforeReparentNode, afterReparentNode) {
+            messageStack.forEach(function(message) {
+                if (message.referenceNode == beforeReparentNode) {
+                    message.referenceNode = afterReparentNode;
+                }
+            });
+            
+            repositionMessages(afterReparentNode);
         }
         
         function show(text, action, referenceNode) {
@@ -152,8 +176,7 @@ define(function(require, exports, module) {
             setupMessageAction(messageNode, action);
             setupCloseHandler(message);
             
-            var lastShownMessage = messages[messages.length-1];
-            showMessageNode(messageNode, referenceNode, lastShownMessage);
+            showMessageNode(messageNode, referenceNode, messages[messages.length-1]);
             
             messageStack.push(message);
         }
