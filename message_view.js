@@ -13,6 +13,7 @@ define(function(require, exports, module) {
         /***** Initialization *****/
 
         var plugin = new Plugin("Ajax.org", main.consumes);
+        var handleEmit = plugin.getEmitter();
         var css = require("text!./message_view.css");
         var html = require("text!./message_view.html");
         
@@ -108,6 +109,9 @@ define(function(require, exports, module) {
             
             var actionNode = messageNode.querySelector(".cmd");
             actionNode.innerHTML = action.label;
+            actionNode.onclick = function() {
+                handleEmit('action', action.cmd);
+            };
             actionNode.style.display = 'block';
         }
         
