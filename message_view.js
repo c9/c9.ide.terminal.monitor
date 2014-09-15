@@ -139,9 +139,12 @@ define(function(require, exports, module) {
             repositionMessages(afterReparentNode);
         }
         
-        function show(text, action, referenceNode) {
-            if (!referenceNode)
+        function show(text, action, tab) {
+            if (!tab)
                 return;
+                
+            var referenceNode = tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
+                    
 
             var messages = messageStack.filter(function(message) {
                 return message.referenceNode == referenceNode;

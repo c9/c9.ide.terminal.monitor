@@ -15,9 +15,9 @@ define(function(require, exports, module) {
     
     var proto = MessageHandler.prototype;
 
-    proto.handleMessage = function(data, referenceNode) {
+    proto.handleMessage = function(data, tab) {
         this.messageMatchers.forEach(function(trigger) {
-            trigger.pattern.test(data) && this.messageView.show(trigger.message, trigger.action, referenceNode);
+            trigger.pattern.test(data) && this.messageView.show(trigger.message, trigger.action, tab);
         }, this);
     };
     

@@ -49,8 +49,7 @@ define(function(require, exports, module) {
             function handleMessage(message) {
                 var tab = session.tab;
                 if (tab.isActive() && tabManager.focussedTab === tab) {
-                    var referenceNode = tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
-                    messageHandler.handleMessage(message, referenceNode);
+                    messageHandler.handleMessage(message, tab);
                 }
             }
             
