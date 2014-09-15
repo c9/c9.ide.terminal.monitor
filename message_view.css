@@ -18,6 +18,9 @@
     box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.8), inset -1px -1px rgba(255, 255, 255, 0.2), inset 1px 1px rgba(255, 255, 255, 0.2);
     .font-smoothing(true);
     line-height: 15px;
+    
+    transition-property: top;
+    transition-duration: 0.5s;
 }
 
 .terminal_monitor_message:focus {

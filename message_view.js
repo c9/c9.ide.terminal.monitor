@@ -115,6 +115,22 @@ define(function(require, exports, module) {
             actionNode.style.display = 'block';
         }
         
+        function setupCloseHandler(message) {
+            var closeNode = message.domNode.querySelector('.close');
+            closeNode.onclick = function() {
+                hide(message);
+            };
+        }
+        
+        function repositionMessages(referenceNode) {
+            messageStack.forEach(function(message, index) {
+                if (message.referenceNode != referenceNode)
+                    return;
+                    
+                showMessageNode(message.domNode, message.referenceNode, messageStack[index-1]);
+            });
+        }
+        
         function show(text, action, referenceNode) {
             if (!referenceNode)
                 return;
@@ -127,34 +143,36 @@ define(function(require, exports, module) {
                 return;
                 
             var messageNode = createMessageNode(text);
+            var message = {
+                referenceNode: referenceNode,
+                domNode: messageNode,
+                text: text
+            };
+            
             setupMessageAction(messageNode, action);
+            setupCloseHandler(message);
             
             var lastShownMessage = messages[messages.length-1];
             showMessageNode(messageNode, referenceNode, lastShownMessage);
             
-            messageStack.push({
-                referenceNode: referenceNode,
-                domNode: messageNode,
-                text: text
-            });
-            
-            if (messageStack.length == 1)
-                connectEventHandlers();
+            messageStack.push(message);
         }
         
-        function hide() {
+        function hide(message) {
             if (!messageStack.length)
-                return;
+                return;    
+        
+            var domNode = message.domNode;
+            domNode.style.display = 'none';
+            domNode.style.opacity = 0;
+            domNode.innerHTML = '';
+            domNode.parentNode.removeChild(domNode);
             
-            messageStack.forEach(function(message) {
-                message.domNode.style.display = 'none';
-                message.domNode.style.opacity = 0;
-                message.domNode.innerHTML = '';
-                message.domNode.parentNode.removeChild(message.domNode);
+            messageStack = messageStack.filter(function(msg) {
+                return msg.domNode != domNode;
             });
             
-            messageStack = [];
-            disconnectEventHandlers();
+            repositionMessages(message.referenceNode);
         }
         
         plugin.on("load", function(){
