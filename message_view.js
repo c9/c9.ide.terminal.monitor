@@ -74,8 +74,6 @@ define(function(require, exports, module) {
                     message.domNode.style.display = 'none';
                 }
             });
-            
-            
         }
         
         function showMessage(message, referenceMessage) {
@@ -115,7 +113,8 @@ define(function(require, exports, module) {
                 return;
             
             var actionNode = message.domNode.querySelector(".cmd");
-            actionNode.innerHTML = action.label;
+            var caption = message.domNode.querySelector(".caption");
+            caption.innerHTML = action.label;
             actionNode.style.display = 'block';
             actionNode.onclick = function() {
                 handleEmit('action', action.cmd);
