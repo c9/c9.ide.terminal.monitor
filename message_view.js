@@ -33,6 +33,9 @@ define(function(require, exports, module) {
             tabManager.on("tabAfterReparent", function(item) {
                 repositionMessages(item.tab);
             });
+            tabManager.on("tabAfterActivateSync", function() {
+                toggleMessages();
+            });
         }
         
         function handleClick(e) {
@@ -61,6 +64,18 @@ define(function(require, exports, module) {
             return messages.some(function(message) {
                 return message.text == text;
             });
+        }
+        
+        function toggleMessages() {
+            messageStack.forEach(function(message) {
+                if (message.tab.active) {
+                    message.domNode.style.display = 'block';
+                } else {
+                    message.domNode.style.display = 'none';
+                }
+            });
+            
+            
         }
         
         function showMessage(message, referenceMessage) {
