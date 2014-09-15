@@ -97,6 +97,8 @@ define(function(require, exports, module) {
                     clearTimeout(resizeTimeout);
                 }
                 
+                messageHandler.reposition(session.tab);
+                
                 resizeTimeout = setTimeout(function() {
                     resizeTimeout = null;
                     hasResizeCompleted = true;

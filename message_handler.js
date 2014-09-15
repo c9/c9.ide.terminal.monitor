@@ -21,5 +21,9 @@ define(function(require, exports, module) {
         }, this);
     };
     
+    proto.reposition = function(tab) {
+        this.messageView.repositionMessages(tab);
+    };
+    
     module.exports = MessageHandler;
 });

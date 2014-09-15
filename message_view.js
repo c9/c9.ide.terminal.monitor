@@ -172,7 +172,8 @@ define(function(require, exports, module) {
         
         plugin.freezePublicAPI({
             show: show,
-            hide: hide
+            hide: hide,
+            repositionMessages: repositionMessages
         });
 
         register(null, {
