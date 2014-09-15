@@ -30,14 +30,8 @@ define(function(require, exports, module) {
         }
 
         function draw() {
-            var beforeReparentNode, afterReparentNode;
-            tabManager.on("tabBeforeReparent", function(tab) {
-                beforeReparentNode = tab.tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
-            });
-            
-            tabManager.on("tabAfterReparent", function(tab) {
-                afterReparentNode = tab.tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
-                moveMessages(beforeReparentNode, afterReparentNode);
+            tabManager.on("tabAfterReparent", function(item) {
+                repositionMessages(item.tab);
             });
         }
         
@@ -69,17 +63,21 @@ define(function(require, exports, module) {
             });
         }
         
-        function showMessageNode(messageNode, referenceNode, referenceMessage) {
+        function showMessage(message, referenceMessage) {
+            var messageNode = message.domNode;
+            var referenceNode = message.tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
             var referenceBoundingRect = referenceNode.getBoundingClientRect();
             var offset = { top: 8, left: 8, right: 8, bottom: 8 };
             var width = referenceBoundingRect.width - offset.right - offset.left;
             var right = window.innerWidth - referenceBoundingRect.right + offset.right;
             var top;
+            
             if (referenceMessage) {
                 top = referenceMessage.domNode.getBoundingClientRect().bottom + offset.bottom;
             } else {
                 top = referenceBoundingRect.top + offset.top;
             }
+            
             messageNode.style.display = 'block';
             messageNode.style.top = top + 'px';
             messageNode.style.right = right + 'px';
@@ -97,16 +95,16 @@ define(function(require, exports, module) {
             return messageNode;
         }
         
-        function setupMessageAction(messageNode, action) {
+        function setupMessageAction(message, action) {
             if (!action)
                 return;
             
-            var actionNode = messageNode.querySelector(".cmd");
+            var actionNode = message.domNode.querySelector(".cmd");
             actionNode.innerHTML = action.label;
+            actionNode.style.display = 'block';
             actionNode.onclick = function() {
                 handleEmit('action', action.cmd);
             };
-            actionNode.style.display = 'block';
         }
         
         function setupCloseHandler(message) {
@@ -116,54 +114,37 @@ define(function(require, exports, module) {
             };
         }
         
-        function repositionMessages(referenceNode) {
+        function repositionMessages(tab) {
             var messages = messageStack.filter(function(message) {
-                return message.referenceNode == referenceNode;
+                return message.tab == tab;
             });
             
             messages.forEach(function(message, index) {
-                if (message.referenceNode != referenceNode)
-                    return;
-                    
-                showMessageNode(message.domNode, message.referenceNode, messageStack[index-1]);
+                showMessage(message, messageStack[index-1]);
             });
-        }
-        
-        function moveMessages(beforeReparentNode, afterReparentNode) {
-            messageStack.forEach(function(message) {
-                if (message.referenceNode == beforeReparentNode) {
-                    message.referenceNode = afterReparentNode;
-                }
-            });
-            
-            repositionMessages(afterReparentNode);
         }
         
         function show(text, action, tab) {
             if (!tab)
                 return;
                 
-            var referenceNode = tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
-                    
-
             var messages = messageStack.filter(function(message) {
-                return message.referenceNode == referenceNode;
+                return message.tab == tab;
             });
             
             if (isAlreadyShowingMessage(messages, text))
                 return;
                 
-            var messageNode = createMessageNode(text);
             var message = {
-                referenceNode: referenceNode,
-                domNode: messageNode,
+                tab: tab,
+                domNode: createMessageNode(text),
+                action: action,
                 text: text
             };
             
-            setupMessageAction(messageNode, action);
+            setupMessageAction(message, action);
             setupCloseHandler(message);
-            
-            showMessageNode(messageNode, referenceNode, messages[messages.length-1]);
+            showMessage(message, messages[messages.length-1]);
             
             messageStack.push(message);
         }
@@ -179,10 +160,10 @@ define(function(require, exports, module) {
             domNode.parentNode.removeChild(domNode);
             
             messageStack = messageStack.filter(function(msg) {
-                return msg.domNode != domNode;
+                return msg != message;
             });
             
-            repositionMessages(message.referenceNode);
+            repositionMessages(message.tab);
         }
         
         plugin.on("load", function(){
