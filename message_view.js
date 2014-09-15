@@ -117,7 +117,8 @@ define(function(require, exports, module) {
             caption.innerHTML = action.label;
             actionNode.style.display = 'block';
             actionNode.onclick = function() {
-                handleEmit('action', action.cmd);
+                caption.innerHTML = "Please wait...";
+                handleEmit('action', action.cmd, message);
             };
         }
         

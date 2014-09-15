@@ -25,5 +25,9 @@ define(function(require, exports, module) {
         this.messageView.repositionMessages(tab);
     };
     
+    proto.hide = function(message) {
+        this.messageView.hide(message);
+    }
+    
     module.exports = MessageHandler;
 });

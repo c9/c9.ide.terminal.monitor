@@ -50,6 +50,7 @@
 .terminal_monitor_message .caption {
     font-size: 12px;
     border-top: 1px solid #7FA017;
+    cursor: pointer;
 }
 
 .terminal_monitor_message .close {
