@@ -106,6 +106,10 @@ require([
             messageHandler.handleMessage("Error: That port is already in use\n");
             expect(formatMessageSpy.calledWith(messages.generic.addressInUse)).to.equal(true);
         });
+        it("catches generic port already in use error (15454)", function() {
+            messageHandler.handleMessage("Failed to open socket on port 15454\n");
+            expect(formatMessageSpy.calledWith(messages.generic.addressInUse)).to.equal(true);
+        });
         it("catches node permission error", function() {
             messageHandler.handleMessage("events.js:48\n\
                     throw arguments[1]; // Unhandled 'error' event\n\

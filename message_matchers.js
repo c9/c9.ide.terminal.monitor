@@ -128,6 +128,14 @@ define(function(require, exports, module) {
                 message: messages.django.wrongPortIP
             },
             {
+                pattern: /Failed to open socket on port 15454/,
+                message: messages.generic.addressInUse,
+                action: {
+                    cmd: "kill -9 $(lsof -i:15454 -t)",
+                    label: "Kill processes"
+                }
+            },
+            {
                 // Django app wrong port
                 pattern: /Error: That port is already in use/,
                 message: messages.generic.addressInUse,
