@@ -140,6 +140,16 @@ require([
             expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
         });
         
+        it("catches jekyll wrong port", function() {
+            messageHandler.handleMessage("Server address: http://0.0.0.0:4000/");
+            expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);
+        });
+        
+        it("catches jekyll running", function() {
+            messageHandler.handleMessage("Server address: http://0.0.0.0:8080/");
+            expect(formatMessageSpy.calledWith(messages.generic.appRunning)).to.equal(true);
+        });
+        
         it("catches grunt-reload wrong port", function() {
             messageHandler.handleMessage("Proxying http://0.0.0.0:9999/");
             expect(formatMessageSpy.calledWith(messages.generic.wrongPortIP)).to.equal(true);

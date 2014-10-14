@@ -120,7 +120,7 @@ define(function(require, exports, module) {
             },
             {
                 // Django correct port
-                pattern: /Starting development server at.*?(?=0.0.0.0:8080)/i,
+                pattern: /Starting development server at.*?(?=0\.0\.0\.0:8080)/i,
                 message: messages.generic.appRunning
             },
             {
@@ -144,6 +144,16 @@ define(function(require, exports, module) {
                     cmd: "kill -9 $(lsof -i:$PORT -t)",
                     label: "Kill processes"
                 }
+            },
+            {
+                // Jekyll
+                pattern: /Server address: http:\/\/(?=0\.0\.0\.0:8080)/,
+                message: messages.generic.appRunning
+            },
+            {
+                // Jekyll
+                pattern: /Server address: http:\/\/(?!0\.0\.0\.0:8080)/,
+                message: messages.generic.wrongPortIP
             }
         ];
         return {
