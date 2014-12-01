@@ -1,13 +1,13 @@
 /** terminal_monitor_message_view **/
 .terminal_monitor_message {
-    border-radius: 3px;
+    border-radius: @terminal-message-border-radius;
     
-    .gradient(~"linear-gradient(to bottom, #6D8009 0%, #546B0C 100%)"); /* W3C */
+    .gradient(~"@{terminal-message-gradient}");
     
     max-width: 350px;
-    padding : 8px;
-    font-family : Arial;
-    font-size : 12px;
+    padding : @terminal-message-padding;
+    font-family : @terminal-message-font-family;
+    font-size : @terminal-message-font-size;
     
     position: absolute;
     display : none;
@@ -15,7 +15,8 @@
     transition: opacity .2s;
     box-sizing: border-box;
     z-index : 10000;
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.8), inset -1px -1px rgba(255, 255, 255, 0.2), inset 1px 1px rgba(255, 255, 255, 0.2);
+    border: @terminal-message-border;
+    box-shadow: @terminal-message-box-shadow;
     .font-smoothing(true);
     line-height: 15px;
 }
@@ -25,7 +26,7 @@
 }
 
 .terminal_monitor_message > .message{
-    color : #E6E6E6;
+    color : @terminal-message-color;
     margin : 0 0 0 1px;
 }
 
@@ -35,7 +36,7 @@
 }
 
 .terminal_monitor_message > .message a {
-    color: rgb(197, 213, 23);
+    color: @terminal-message-link-color;
 }
 
 .terminal_monitor_message .cmd {
@@ -43,13 +44,19 @@
     margin: 5px 0 0 5px;
     float: right;
     
-    .gradient(~"linear-gradient(to bottom, #6D8009 0%, #546B0C 100%)"); /* W3C */
-    text-shadow: #383838 0px 1px 0px;
+    .gradient(~"@{terminal-message-button-gradient}");
+    text-shadow: @terminal-message-button-text-shadow;
+}
+
+.terminal_monitor_message .cmd:hover {
+    .gradient(~"@{terminal-message-button-hover-gradient}");
+}
+.terminal_monitor_message .cmd:active {
+    .gradient(~"@{terminal-message-button-active-gradient}");
 }
 
 .terminal_monitor_message .caption {
-    font-size: 12px;
-    border-top: 1px solid #7FA017;
+    border-top: @terminal-message-button-border-top;
     cursor: pointer;
 }
 
@@ -57,18 +64,20 @@
     position: absolute;
     top: 5px;
     right: 5px;
-    color: #fff;
     
     width: 14px;
     height: 14px;
     display: block;
     
-    background-image: url("@{image-path}/close_tab_btn.png");
-    background-repeat: no-repeat;
-    background-position: 0 -14px;
+    .image-2x(@terminal-message-close-image, @terminal-message-close-image-width, @terminal-message-close-image-height);
+    background-position: @terminal-message-close-idle;
     cursor: pointer;
 }
 
 .terminal_monitor_message .close:hover {
-    background-position: -14px -14px;
+    background-position: @terminal-message-close-hover;
+}
+
+.terminal_monitor_message .close:active {
+    background-position: @terminal-message-close-active;
 }
