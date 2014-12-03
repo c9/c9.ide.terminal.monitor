@@ -34,7 +34,7 @@ define(function(require, exports, module) {
         })
         
         editors.on("create", function(e) {
-            if (!e.editor || e.editor.type !== "terminal" && e.editor.type !== "output")
+            if (!e.editor || e.editor.type !== "terminal") // && e.editor.type !== "output")
                 return;
             
             e.editor.on("documentLoad", function(e) {
