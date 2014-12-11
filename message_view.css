@@ -37,6 +37,10 @@
 
 .terminal_monitor_message > .message a {
     color: @terminal-message-link-color;
+    text-decoration: none;
+}
+.terminal_monitor_message > .message a:hover {
+    text-decoration: underline;
 }
 
 .terminal_monitor_message .cmd {
