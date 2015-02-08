@@ -9,15 +9,13 @@
         "url": "http://github.com/c9/c9.ide.terminal.monitor.git"
     },
     "plugins": {
-        "plugin": {
-            "message_view": {},
-            "monitor": {}
-        }
+        "message_view": {},
+        "monitor": {}
     },
     "categories": [
         "core"
     ],
     "licenses": [
-        ""
+        "MIT"
     ]
 }
