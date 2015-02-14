@@ -2,7 +2,6 @@
  * Terminal Module for the Cloud9
  *
  * @copyright 2012, Ajax.org B.V.
- * @license GPLv3 <http://www.gnu.org/licenses/gpl.txt>
  */
 
 define(function(require, exports, module) {
