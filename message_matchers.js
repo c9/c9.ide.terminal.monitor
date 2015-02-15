@@ -1,7 +1,7 @@
 /**
  * Terminal Module for the Cloud9
  *
- * @copyright 2012, Ajax.org B.V.
+ * @copyright 2013, Ajax.org B.V.
  */
 
 define(function(require, exports, module) {
