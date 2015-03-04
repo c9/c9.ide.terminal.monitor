@@ -27,20 +27,27 @@ define(function(require, exports, module) {
             // Load CSS
             ui.insertCss(css, options.staticPrefix, plugin);
             
-            tabManager.on("tabAfterReparent", function(item) {
-                repositionMessages(item.tab);
-            });
             tabManager.on("tabAfterActivateSync", function() {
                 toggleMessages();
+            });
+            tabManager.on("tabAfterClose", function(e) {
+                messageStack = messageStack.filter(function(msg) {
+                    if (e.tab !== msg.tab)
+                        return true;
+                    hide(msg, true);
+                    return false;
+                });
             });
         }
         
         function handleClick(e) {
             switch (e.target.getAttribute("data-type")) {
                 case "preview": 
-                    handlePreview(e);    
+                    handlePreview(e);
                 default:
-                    hide();
+                    messageStack.some(function(msg) {
+                        if (msg.domNode.contains(e.target)) hide(msg);
+                    });
             }
         }
         
@@ -66,36 +73,58 @@ define(function(require, exports, module) {
         function toggleMessages() {
             messageStack.forEach(function(message) {
                 if (message.tab.active) {
-                    message.domNode.style.display = 'block';
+                    message.domNode.style.display = 'table';
                 } else {
                     message.domNode.style.display = 'none';
                 }
             });
         }
         
-        function showMessage(message, referenceMessage) {
+        function showMessage(message) {
             var messageNode = message.domNode;
-            var referenceNode = message.tab.aml.$pHtmlNode.querySelector('.session_page.curpage');
-            var referenceBoundingRect = referenceNode.getBoundingClientRect();
-            var offset = { top: 8, left: 8, right: 8, bottom: 8 };
-            var width = referenceBoundingRect.width - offset.right - offset.left;
-            var right = window.innerWidth - referenceBoundingRect.right + offset.right;
-            var top;
+            var referenceNode = message.tab.editor.container;
+            var messageContainer = createMessageContainer(referenceNode);
+            messageContainer.insertBefore(messageNode, messageContainer.firstChild);
+            message.timeStamp = Date.now();
             
-            if (referenceMessage) {
-                top = referenceMessage.domNode.getBoundingClientRect().bottom + offset.bottom;
-            } else {
-                top = referenceBoundingRect.top + offset.top;
-            }
-            
-            messageNode.style.display = 'block';
-            messageNode.style.top = top + 'px';
-            messageNode.style.right = right + 'px';
-            messageNode.style.width = width + 'px';
-            
+            messageNode.style.display = 'table';
             setTimeout(function() {
                 messageNode.style.opacity = 1;
             });
+        }
+        
+        function createMessageContainer(referenceNode) {
+            var messageContainer = referenceNode.querySelector('.ace_editor>.terminal_monitor_messageContainer');
+            if (messageContainer) 
+                return messageContainer;
+            
+            messageContainer = document.createElement('div');
+            messageContainer.className = 'terminal_monitor_messageContainer';
+            var aceContainer = referenceNode.querySelector('.ace_editor');
+            aceContainer.addEventListener('keydown', function onKeydown(e) {
+                var lastMessage;
+                for (var i = messageStack.length; i--; ) {
+                    var message = messageStack[i];
+                    if (message.domNode.parentNode == messageContainer && message.tab.active) {
+                        lastMessage = message;
+                        break;
+                    }
+                }
+                if (!lastMessage)
+                    return;
+                if (e.keyCode == 27 || e.timeStamp - lastMessage.timeStamp > 30000) {
+                    hide(lastMessage);
+                    messageStack = messageStack.filter(function(msg) {
+                        return msg.domNode.parentNode;
+                    });
+                }
+                if (!messageContainer.children.length) {
+                    aceContainer.removeEventListener('keydown', onKeydown, true);
+                    messageContainer.parentNode.removeChild(messageContainer);
+                }
+            }, true);
+            aceContainer.appendChild(messageContainer);
+            return messageContainer;
         }
         
         function createMessageNode(text) {
@@ -113,7 +142,7 @@ define(function(require, exports, module) {
             var actionNode = message.domNode.querySelector(".cmd");
             var caption = message.domNode.querySelector(".caption");
             caption.innerHTML = action.label;
-            actionNode.style.display = 'block';
+            actionNode.style.display = 'table';
             actionNode.onclick = function() {
                 caption.innerHTML = "Please wait...";
                 handleEmit('action', action.cmd, message);
@@ -132,8 +161,8 @@ define(function(require, exports, module) {
                 return message.tab == tab;
             });
             
-            messages.forEach(function(message, index) {
-                showMessage(message, messageStack[index-1]);
+            messages.forEach(function(message) {
+                showMessage(message);
             });
         }
         
@@ -157,26 +186,20 @@ define(function(require, exports, module) {
             
             setupMessageAction(message, action);
             setupCloseHandler(message);
-            showMessage(message, messages[messages.length-1]);
+            showMessage(message);
             
             messageStack.push(message);
         }
         
-        function hide(message) {
-            if (!messageStack.length)
-                return;    
-        
+        function hide(message, batch) {
             var domNode = message.domNode;
-            domNode.style.display = 'none';
-            domNode.style.opacity = 0;
-            domNode.innerHTML = '';
-            domNode.parentNode.removeChild(domNode);
+            if (domNode.parentNode)
+                domNode.parentNode.removeChild(domNode);
             
+            if (batch) return;
             messageStack = messageStack.filter(function(msg) {
-                return msg != message;
+                return msg.domNode != message.domNode;
             });
-            
-            repositionMessages(message.tab);
         }
         
         plugin.on("load", function(){

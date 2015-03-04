@@ -20,27 +20,36 @@ define(function(require, exports, module) {
         
         var MessageHandler = require("./message_handler");
         var messageMatchers = require("./message_matchers")(c9);
-        var _ = require('lodash');
         
         var plugin = new Plugin("Ajax.org", main.consumes);
         var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
         
-        messageView.on("action", function(cmd, message) {
-            proc.execFile(BASHBIN, {
-                args: ["--login", "-c", cmd]
-            }, function() {
-                messageHandler.hide(message);
-            });
-        })
-        
-        editors.on("create", function(e) {
-            if (!e.editor || e.editor.type !== "terminal") // && e.editor.type !== "output")
-                return;
+        var loaded = false;
+        function load() {
+            if (loaded) return false;
+            loaded = true;
             
-            e.editor.on("documentLoad", function(e) {
-                setupTerminalMessageHandler(e.doc.getSession());
-            });
-        });
+            messageView.on("action", function(cmd, message) {
+                console.log(cmd);
+                proc.execFile(BASHBIN, {
+                    args: ["--login", "-c", cmd]
+                }, function() {
+                    messageHandler.hide(message);
+                });
+            }, plugin);
+            
+            editors.on("create", function(e) {
+                if (!e.editor || e.editor.type !== "terminal" && e.editor.type !== "output")
+                    return;
+                
+                e.editor.on("documentLoad", onDocumentLoad);
+            }, plugin);
+            
+            function onDocumentLoad(e) {
+                var session = e.doc.getSession();
+                session.once("terminalReady", setupTerminalMessageHandler);
+            }
+        }
         
         function setupTerminalMessageHandler(session) {
             var terminal = session.terminal;
@@ -58,11 +67,14 @@ define(function(require, exports, module) {
                 var y = e.y;
                 var linesIndex = y + e.ybase - 1;
                 
-                if (!_.isArray(e.lines[linesIndex])) {
+                if (e.y >= e.rows)
+                    return; // can happen during resize
+                if (!Array.isArray(e.lines[linesIndex])) {
                     errorHandler.reportError(new Error("Can not access line item in lines array"), {
                         y: e.y,
                         ybase: e.ybase,
-                        linesCnt: e.lines ? e.lines.length : undefined
+                        linesCnt: e.lines ? e.lines.length : undefined,
+                        rows: e.rows
                     }, ["terminal.monitor"]);
                     return;
                 }
@@ -110,6 +122,16 @@ define(function(require, exports, module) {
                 }, 1000);
             });
         }
+        
+        /***** Lifecycle *****/
+        
+        plugin.on("load", function() {
+            load();
+        });
+        
+        plugin.on("unload", function() {
+             loaded = false;
+        });
         
         plugin.freezePublicAPI({});
         

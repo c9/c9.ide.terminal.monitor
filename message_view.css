@@ -1,4 +1,12 @@
 /** terminal_monitor_message_view **/
+.terminal_monitor_messageContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 30;
+    overflow: auto;
+    max-height: 100%;
+}
 .terminal_monitor_message {
     border-radius: @terminal-message-border-radius;
     
@@ -6,15 +14,14 @@
     
     max-width: 350px;
     padding : @terminal-message-padding;
+    margin: 4px;
     font-family : @terminal-message-font-family;
     font-size : @terminal-message-font-size;
     
-    position: absolute;
     display : none;
     opacity: 0;
     transition: opacity .2s;
     box-sizing: border-box;
-    z-index : 10000;
     border: @terminal-message-border;
     box-shadow: @terminal-message-box-shadow;
     .font-smoothing(true);
