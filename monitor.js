@@ -30,7 +30,6 @@ define(function(require, exports, module) {
             loaded = true;
             
             messageView.on("action", function(cmd, message) {
-                console.log(cmd);
                 proc.execFile(BASHBIN, {
                     args: ["--login", "-c", cmd]
                 }, function() {
