@@ -6,8 +6,8 @@ require([
     "lib/architect/architect", 
     "lib/chai/chai", 
     "sinon",
-    "./plugins/c9.ide.terminal.monitor/message_handler",
-    "./plugins/c9.ide.terminal.monitor/message_matchers"
+    "plugins/c9.ide.terminal.monitor/message_handler",
+    "plugins/c9.ide.terminal.monitor/message_matchers"
 ], function (architect, chai, sinon, MessageHandler, messageMatchers) {
     var expect = chai.expect;
     var c9 = {
