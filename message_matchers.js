@@ -157,7 +157,7 @@ define(function(require, exports, module) {
             {
                 // Gradle
                 pattern: /Tomcat started on port\(s\): 8080/,
-                messages: messages.generic.appRunning
+                message: messages.generic.appRunning
             }
         ];
         return {
