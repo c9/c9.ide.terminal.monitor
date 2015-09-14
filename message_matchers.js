@@ -153,6 +153,11 @@ define(function(require, exports, module) {
                 // Jekyll
                 pattern: /Server address: http:\/\/(?!0\.0\.0\.0:8080)/,
                 message: messages.generic.wrongPortIP
+            },
+            {
+                // Gradle
+                pattern: /Tomcat started on port\(s\): 8080/,
+                messages: messages.generic.appRunning
             }
         ];
         return {
