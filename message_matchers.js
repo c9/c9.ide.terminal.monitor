@@ -136,6 +136,14 @@ define(function(require, exports, module) {
                 }
             },
             {
+                pattern: /Failed to listen on 0.0.0.0:8080 \(reason: Address already in use\)/,
+                message: messages.generic.debuggerPortInUse,
+                action: {
+                    cmd: "kill -9 $(lsof -i:8080 -t)",
+                    label: "Kill processes"
+                }
+            },
+            {
                 // Django app wrong port
                 pattern: /Error: That port is already in use/,
                 message: messages.generic.addressInUse,
