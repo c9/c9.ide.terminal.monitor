@@ -15,7 +15,7 @@ define(function(require, exports, module) {
         var messages = {
             generic: {
                 wrongPortIP: prefix + wrongPortIP + "Try passing $PORT and $IP to properly launch your application. You can find more information <a href='https://docs.c9.io/running_and_debugging_code.html' target='_blank'>in our docs</a>.",
-                appRunning: prefix + "Your code is running at <a href='javascript://' data-type='preview'>https://" + c9.hostname + "</a>",
+                appRunning: prefix + "Your code is running at <a href='https://" + c9.hostname + "' target='_blank'>https://" + c9.hostname + "</a>",
                 bindToInternalIP: prefix + wrongPortIP + "Only binding to the internal IP configured in $IP is supported.",
                 noLiveReload: prefix + "We currently only support listening on one port. Opening up a second port for live-reloading is currently not possible.",
                 addressInUse: prefix + "There are issues starting your app. Please make sure you are using the correct $IP and $PORT, run as the correct user or kill any processes which might be conflicting. You can find more information <a href='https://docs.c9.io/common_errors.html' target='_blank'>in our docs</a>.",
