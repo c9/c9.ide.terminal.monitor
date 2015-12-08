@@ -166,6 +166,11 @@ define(function(require, exports, module) {
                 // Gradle
                 pattern: /Tomcat started on port\(s\): 8080/,
                 message: messages.generic.appRunning
+            },
+            {
+                // Spring
+                pattern: /::\s+Spring Boot\s+::\s+\(v\d.\d.\d.RELEASE\)/,
+                message: messages.generic.appRunning
             }
         ];
         return {
