@@ -16,7 +16,17 @@ define(function(require, exports, module) {
 
     proto.handleMessage = function(data, tab) {
         this.messageMatchers.forEach(function(trigger) {
-            trigger.pattern.test(data) && this.messageView.show(trigger.message, trigger.action, tab);
+            var matches = trigger.pattern.exec(data);
+
+            if (matches !== null) {
+                var message = trigger.message;
+
+                matches.map(function(value, key) {
+                    message = message.replace("{" + key + "}", value);
+                });
+
+                this.messageView.show(message, trigger.action, tab);
+            }
         }, this);
     };
     
