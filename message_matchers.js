@@ -29,7 +29,11 @@ define(function(require, exports, module) {
             },
             django: {
                 wrongPortIP: prefix + wrongPortIP + " Use './manage.py runserver $IP:$PORT' to run your Django application."
-            }
+            },
+            google: {
+                wrongPortIP: prefix + wrongPortIP + " Use 'mvn gcloud:run -Dgcloud.host=$IP:$PORT' to run your application.",
+                appDeployed: prefix + "Your app has been deployed to <a href='javascript://' data-type='preview'>{1}</a>",
+            },
         };
         
         var matchers = [
@@ -171,7 +175,22 @@ define(function(require, exports, module) {
                 // Spring
                 pattern: /::\s+Spring Boot\s+::\s+\(v\d.\d.\d.RELEASE\)/,
                 message: messages.generic.appRunning
-            }
+            },
+            {
+                // Google App Engine: Java Managed VM
+                pattern: /Starting module "\w+" running at: http:\/\/(?=0\.0\.0\.0:8080)/,
+                message: messages.generic.appRunning
+            },
+            {
+                // Google App Engine: Java Managed VM - Wrong IP/PORT
+                pattern: /Starting module "\w+" running at: http:\/\/(?!0\.0\.0\.0:8080)/,
+                message: messages.google.wrongPortIP
+            },
+            {
+                // Google App Engine: Deployment
+                pattern: /Deployed module \[\w+\] to \[(https:\/\/[a-z0-9\-]+\.appspot\.com)\]/,
+                message: messages.google.appDeployed
+            },
         ];
         return {
             matchers: matchers,
