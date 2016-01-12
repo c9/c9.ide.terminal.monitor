@@ -191,6 +191,11 @@ define(function(require, exports, module) {
                 pattern: /Deployed module \[\w+\] to \[(https:\/\/[a-z0-9\-]+\.appspot\.com)\]/,
                 message: messages.google.appDeployed
             },
+            {
+                // web.py / lpthw.web correct port
+                pattern: /^http:\/\/0\.0\.0\.0:8080/i,
+                message: messages.generic.appRunning
+            },
         ];
         return {
             matchers: matchers,
