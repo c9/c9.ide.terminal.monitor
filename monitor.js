@@ -53,7 +53,9 @@ define(function(require, exports, module) {
         function setupTerminalMessageHandler(session) {
             var terminal = session.terminal;
             var seenUpTo = 0;
+            var lastNewLine = 0;
             var hasResizeCompleted = false;
+            var timer = null;
             
             function handleMessage(message) {
                 var tab = session.tab;
@@ -61,50 +63,36 @@ define(function(require, exports, module) {
                     messageHandler.handleMessage(message, tab);
                 }
             }
-            
-            terminal.on("newline", function(e) {
-                var y = e.y;
-                var linesIndex = y + e.ybase - 1;
-                
-                if (e.y >= e.rows)
-                    return; // can happen during resize
-                if (!Array.isArray(e.lines[linesIndex])) {
-                    errorHandler.reportError(new Error("Can not access line item in lines array"), {
-                        y: e.y,
-                        ybase: e.ybase,
-                        linesCnt: e.lines ? e.lines.length : undefined,
-                        rows: e.rows
-                    }, ["terminal.monitor"]);
-                    return;
-                }
-                
-                var line = e.lines[linesIndex].map(function(character) {
-                    return character && character[1];
-                }).join("");
-                
-                if (!hasResizeCompleted) {
-                    if (line.length) {
-                        seenUpTo = e.y;
-                    }
-                    return;
-                }
-                
-                // There are cases where newline doesn't fire for a "rendered" newline.
-                // Making sure that we check lines when we encounter these gaps.
-                while (seenUpTo < y) {
-                    seenUpTo++;
-                    var tmpLinesIndex = seenUpTo + e.ybase - 1;
-                    var tmpLine = e.lines[tmpLinesIndex].map(function(character) {
-                        return character && character[1];
-                    }).join("");
-                    handleMessage(tmpLine);
-                }
-
-                if (y - 1 > seenUpTo) return;
-                seenUpTo = y;
-                
-                handleMessage(line);
+            terminal.on("discardOldScrollback",  function(e) {
+                seenUpTo = Math.max(seenUpTo - e, 0);
+                if (lastNewLine) 
+                    lastNewLine -= e;
             });
+            terminal.on("newline", function(e) {
+                lastNewLine = e.y + e.ybase - 1;
+                if (!timer)
+                    timer = setTimeout(checkNewText);
+            });
+            function checkNewText() {
+                timer = null;
+                if (!hasResizeCompleted) {
+                    return;
+                }
+                var lines = terminal.lines;
+                if (lastNewLine >= lines.length) lastNewLine = lines.length - 1;
+                var lineContents = "";
+                for (var i = Math.min(seenUpTo + 1, lastNewLine); i <= lastNewLine; i++) {
+                    var line = lines[i];
+                    if (!line)
+                        continue;
+                    lineContents += lineToString(line);
+                    if (line.wrapped)
+                        continue;
+                    seenUpTo = i;
+                    handleMessage(lineContents);
+                    lineContents = "";
+                }
+            }
             
             var resizeTimeout;
             terminal.on("resizeStart", function() {
@@ -120,6 +108,12 @@ define(function(require, exports, module) {
                     hasResizeCompleted = true;
                 }, 1000);
             });
+        }
+        
+        function lineToString(line) {
+            return line.map(function(character) {
+                return character && character[1];
+            }).join("");
         }
         
         /***** Lifecycle *****/
