@@ -75,9 +75,9 @@ define(function(require, exports, module) {
             });
             function checkNewText() {
                 timer = null;
-                if (!hasResizeCompleted) {
+                if (!hasResizeCompleted)
                     return;
-                }
+                
                 var lines = terminal.lines;
                 if (lastNewLine >= lines.length) lastNewLine = lines.length - 1;
                 var lineContents = "";
@@ -116,6 +116,14 @@ define(function(require, exports, module) {
             }).join("");
         }
         
+        function addMessageMatcher(matcher) {
+            messageMatchers.matchers.pushUnique(matcher);
+        }
+        
+        function removeMessageMatcher(matcher) {
+            messageMatchers.matchers.remove(matcher);
+        }
+        
         /***** Lifecycle *****/
         
         plugin.on("load", function() {
@@ -126,7 +134,10 @@ define(function(require, exports, module) {
              loaded = false;
         });
         
-        plugin.freezePublicAPI({});
+        plugin.freezePublicAPI({
+            addMessageMatcher: addMessageMatcher,
+            removeMessageMatcher: removeMessageMatcher,
+        });
         
         /***** Register and define API *****/
         register(null, {

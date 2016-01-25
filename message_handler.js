@@ -20,12 +20,13 @@ define(function(require, exports, module) {
 
             if (matches !== null) {
                 var message = trigger.message;
-
-                matches.map(function(value, key) {
-                    message = message.replace("{" + key + "}", value);
+                message = message.replace(/{(\d)}/g, function(_, num) {
+                    return matches[num] || _;
                 });
-
-                this.messageView.show(message, trigger.action, tab);
+                if (trigger.onMatch)
+                    trigger.onMatch(matches, tab);
+                else
+                    this.messageView.show(message, trigger.action, tab);
             }
         }, this);
     };
