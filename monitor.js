@@ -1,8 +1,8 @@
 define(function(require, exports, module) {
     main.consumes = [
         "c9", "Plugin", "editors", "dialog.error",
-        "terminal.monitor.message_view", "tabManager", "error_handler",
-        "proc"
+        "terminal.monitor.message_view", "tabManager",
+        "proc", "commands"
     ];
     main.provides = ["terminal.monitor"];
     return main;
@@ -15,14 +15,12 @@ define(function(require, exports, module) {
         var editors = imports.editors;
         var messageView = imports["terminal.monitor.message_view"];
         var tabManager = imports.tabManager;
-        var errorHandler = imports.error_handler;
+        var commands = imports.commands;
         var proc = imports.proc;
         
-        var MessageHandler = require("./message_handler");
-        var messageMatchers = require("./message_matchers")(c9);
+        var messageMatchers = require("./message_matchers")(c9).matchers;
         
         var plugin = new Plugin("Ajax.org", main.consumes);
-        var messageHandler = new MessageHandler(messageMatchers.matchers, messageView);
         
         var loaded = false;
         function load() {
@@ -33,7 +31,7 @@ define(function(require, exports, module) {
                 proc.execFile(BASHBIN, {
                     args: ["--login", "-c", cmd]
                 }, function() {
-                    messageHandler.hide(message);
+                    messageView.hide(message);
                 });
             }, plugin);
             
@@ -57,12 +55,6 @@ define(function(require, exports, module) {
             var hasResizeCompleted = false;
             var timer = null;
             
-            function handleMessage(message) {
-                var tab = session.tab;
-                if (tab.isActive() && tabManager.focussedTab === tab) {
-                    messageHandler.handleMessage(message, tab);
-                }
-            }
             terminal.on("discardOldScrollback",  function(e) {
                 seenUpTo = Math.max(seenUpTo - e, 0);
                 if (lastNewLine) 
@@ -81,15 +73,15 @@ define(function(require, exports, module) {
                 var lines = terminal.lines;
                 if (lastNewLine >= lines.length) lastNewLine = lines.length - 1;
                 var lineContents = "";
-                for (var i = Math.min(seenUpTo + 1, lastNewLine); i <= lastNewLine; i++) {
+                for (var i = Math.min(seenUpTo, lastNewLine); i <= lastNewLine; i++) {
                     var line = lines[i];
                     if (!line)
                         continue;
                     lineContents += lineToString(line);
                     if (line.wrapped)
                         continue;
-                    seenUpTo = i;
-                    handleMessage(lineContents);
+                    seenUpTo = i + 1;
+                    handleMessage(lineContents, session.tab);
                     lineContents = "";
                 }
             }
@@ -101,7 +93,7 @@ define(function(require, exports, module) {
                     clearTimeout(resizeTimeout);
                 }
                 
-                messageHandler.reposition(session.tab);
+                messageView.repositionMessages(session.tab);
                 
                 resizeTimeout = setTimeout(function() {
                     resizeTimeout = null;
@@ -116,12 +108,27 @@ define(function(require, exports, module) {
             }).join("");
         }
         
-        function addMessageMatcher(matcher) {
-            messageMatchers.matchers.pushUnique(matcher);
+        function handleMessage(data, tab) {
+            messageMatchers.forEach(function(trigger) {
+                var matches = trigger.pattern.exec(data);
+    
+                if (matches !== null) {
+                    var message = trigger.message;
+                    message = message && message.replace(/{(\d)}/g, function(_, num) {
+                        return matches[num] || _;
+                    });
+                    if (!trigger.onMatch)
+                        messageView.show(message, trigger.action, tab);
+                    else if (typeof trigger.onMatch == "function")
+                        trigger.onMatch(matches, tab);
+                    else if (trigger.onMatch == "reloadPreview")
+                        reloadPreview();
+                }
+            });
         }
         
-        function removeMessageMatcher(matcher) {
-            messageMatchers.matchers.remove(matcher);
+        function reloadPreview() {
+            commands.exec("reloadpreview");
         }
         
         /***** Lifecycle *****/
@@ -134,10 +141,7 @@ define(function(require, exports, module) {
              loaded = false;
         });
         
-        plugin.freezePublicAPI({
-            addMessageMatcher: addMessageMatcher,
-            removeMessageMatcher: removeMessageMatcher,
-        });
+        plugin.freezePublicAPI({});
         
         /***** Register and define API *****/
         register(null, {

@@ -188,6 +188,10 @@ define(function(require, exports, module) {
                 message: messages.google.wrongPortIP
             },
             {
+                pattern: /New instance for module "default" serving on:/i,
+                onMatch: "reloadPreview"
+            },
+            {
                 // Google App Engine: Deployment
                 pattern: /Deployed module \[\w+\] to \[(https:\/\/[a-z0-9\-]+\.appspot\.com)\]/,
                 message: messages.google.appDeployed

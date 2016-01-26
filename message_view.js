@@ -87,7 +87,7 @@ define(function(require, exports, module) {
             messageContainer.insertBefore(messageNode, messageContainer.firstChild);
             message.timeStamp = Date.now();
             
-            messageNode.style.display = 'table';
+            messageNode.style.display = message.tab.active ? 'table' : 'none';
             setTimeout(function() {
                 messageNode.style.opacity = 1;
             });
