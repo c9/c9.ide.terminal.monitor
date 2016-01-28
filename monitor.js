@@ -131,6 +131,13 @@ define(function(require, exports, module) {
             commands.exec("reloadpreview");
         }
         
+        function addMessageMatcher(matcher) {
+            messageMatchers.pushUnique(matcher);
+        }
+        
+        function removeMessageMatcher(matcher) {
+            messageMatchers.remove(matcher);
+        }
         /***** Lifecycle *****/
         
         plugin.on("load", function() {
@@ -141,7 +148,16 @@ define(function(require, exports, module) {
              loaded = false;
         });
         
-        plugin.freezePublicAPI({});
+        plugin.freezePublicAPI({
+            /**
+             * @ignore
+             */
+            addMessageMatcher: addMessageMatcher,
+            /**
+             * @ignore
+             */
+            removeMessageMatcher: removeMessageMatcher,
+        });
         
         /***** Register and define API *****/
         register(null, {
