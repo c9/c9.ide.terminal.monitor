@@ -201,6 +201,11 @@ define(function(require, exports, module) {
                 pattern: /^http:\/\/0\.0\.0\.0:8080/i,
                 message: messages.generic.appRunning
             },
+            {
+                // newclient proxy + homepage
+                pattern: /Server homepage.* is UP/,
+                message: messages.generic.appRunning,
+            }
         ];
         return {
             matchers: matchers,
