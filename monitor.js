@@ -157,6 +157,16 @@ define(function(require, exports, module) {
              * @ignore
              */
             removeMessageMatcher: removeMessageMatcher,
+            /**
+             * for testing
+             * @ignore
+             */
+            get messageMatchers() { return messageMatchers },
+            /**
+             * for testing
+             * @ignore
+             */
+            handleMessage: handleMessage,
         });
         
         /***** Register and define API *****/
