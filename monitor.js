@@ -8,7 +8,7 @@ define(function(require, exports, module) {
     return main;
 
     function main(options, imports, register) {
-        var BASHBIN = options.bashBin ||  "/bin/bash";
+        var BASHBIN = options.bashBin || "/bin/bash";
         
         var c9 = imports.c9;
         var Plugin = imports.Plugin;
@@ -55,7 +55,7 @@ define(function(require, exports, module) {
             var hasResizeCompleted = false;
             var timer = null;
             
-            terminal.on("discardOldScrollback",  function(e) {
+            terminal.on("discardOldScrollback", function(e) {
                 seenUpTo = Math.max(seenUpTo - e, 0);
                 if (lastNewLine) 
                     lastNewLine -= e;
@@ -161,7 +161,7 @@ define(function(require, exports, module) {
              * for testing
              * @ignore
              */
-            get messageMatchers() { return messageMatchers },
+            get messageMatchers() { return messageMatchers; },
             /**
              * for testing
              * @ignore

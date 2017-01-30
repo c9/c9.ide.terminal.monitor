@@ -20,7 +20,7 @@ define(function(require, exports, module) {
         var messageStack = [];
 
         var loaded = false;
-        function load(){
+        function load() {
             if (loaded) return false;
             loaded = true;
             
@@ -103,7 +103,7 @@ define(function(require, exports, module) {
             var aceContainer = referenceNode.querySelector('.ace_editor');
             aceContainer.addEventListener('keydown', function onKeydown(e) {
                 var lastMessage;
-                for (var i = messageStack.length; i--; ) {
+                for (var i = messageStack.length; i--;) {
                     var message = messageStack[i];
                     if (message.domNode.parentNode == messageContainer && message.tab.active) {
                         lastMessage = message;
@@ -202,7 +202,7 @@ define(function(require, exports, module) {
             });
         }
         
-        plugin.on("load", function(){
+        plugin.on("load", function() {
             load();
         });
         
